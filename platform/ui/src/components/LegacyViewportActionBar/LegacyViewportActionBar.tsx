@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, ButtonGroup, Button, CinePlayer } from '../';
+import { Icon, ButtonGroup, Button, LegacyCinePlayer } from '../';
 import useOnClickOutside from '../../utils/useOnClickOutside';
 import PatientInfo from '../PatientInfo';
 import { StringNumber } from '../../types';
@@ -122,7 +122,7 @@ const LegacyViewportActionBar = ({
       )}
       {showCine && !showNavArrows && (
         <div className="mt-2 mr-auto min-w-48 max-w-48">
-          <CinePlayer {...cineProps} />
+          <LegacyCinePlayer {...cineProps} />
         </div>
       )}
       <div className="flex h-8 mt-2 ml-4 mr-2" onClick={onPatientInfoClick}>

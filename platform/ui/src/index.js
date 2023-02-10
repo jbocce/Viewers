@@ -43,7 +43,7 @@ export {
   Button,
   ButtonGroup,
   ContextMenu,
-  CinePlayer,
+  LegacyCinePlayer,
   DateRange,
   Dialog,
   Dropdown,
