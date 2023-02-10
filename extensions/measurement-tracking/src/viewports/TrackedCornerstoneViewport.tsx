@@ -4,7 +4,7 @@ import OHIF, { utils } from '@ohif/core';
 
 import {
   Notification,
-  ViewportActionBar,
+  LegacyViewportActionBar,
   useCine,
   useViewportGrid,
   useViewportDialog,
@@ -196,7 +196,7 @@ function TrackedCornerstoneViewport(props) {
 
   return (
     <>
-      <ViewportActionBar
+      <LegacyViewportActionBar
         onDoubleClick={evt => {
           evt.stopPropagation();
           evt.preventDefault();

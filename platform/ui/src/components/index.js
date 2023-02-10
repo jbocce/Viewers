@@ -53,7 +53,7 @@ import Tooltip from './Tooltip';
 import TooltipClipboard from './TooltipClipboard';
 import Typography from './Typography';
 import Viewport from './Viewport';
-import ViewportActionBar from './ViewportActionBar';
+import LegacyViewportActionBar from './LegacyViewportActionBar';
 import ViewportDownloadForm from './ViewportDownloadForm';
 import ViewportGrid from './ViewportGrid';
 import ViewportPane from './ViewportPane';
@@ -135,7 +135,7 @@ export {
   TooltipClipboard,
   Typography,
   Viewport,
-  ViewportActionBar,
+  LegacyViewportActionBar,
   ViewportDownloadForm,
   ViewportGrid,
   ViewportPane,

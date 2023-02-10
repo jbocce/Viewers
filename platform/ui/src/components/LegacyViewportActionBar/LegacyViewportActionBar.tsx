@@ -5,7 +5,7 @@ import useOnClickOutside from '../../utils/useOnClickOutside';
 import PatientInfo from '../PatientInfo';
 import { StringNumber } from '../../types';
 
-const ViewportActionBar = ({
+const LegacyViewportActionBar = ({
   studyData,
   showNavArrows,
   showStatus,
@@ -142,7 +142,7 @@ const ViewportActionBar = ({
   );
 };
 
-ViewportActionBar.propTypes = {
+LegacyViewportActionBar.propTypes = {
   onArrowsClick: PropTypes.func.isRequired,
   showNavArrows: PropTypes.bool,
   showCine: PropTypes.bool,
@@ -169,7 +169,7 @@ ViewportActionBar.propTypes = {
   getStatusComponent: PropTypes.func.isRequired,
 };
 
-ViewportActionBar.defaultProps = {
+LegacyViewportActionBar.defaultProps = {
   cineProps: {},
   showCine: false,
   showStatus: true,
@@ -177,4 +177,4 @@ ViewportActionBar.defaultProps = {
   showPatientInfo: false,
 };
 
-export default ViewportActionBar;
+export default LegacyViewportActionBar;

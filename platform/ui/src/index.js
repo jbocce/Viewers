@@ -97,7 +97,7 @@ export {
   TooltipClipboard,
   Typography,
   Viewport,
-  ViewportActionBar,
+  LegacyViewportActionBar,
   ViewportDownloadForm,
   ViewportGrid,
   ViewportPane,

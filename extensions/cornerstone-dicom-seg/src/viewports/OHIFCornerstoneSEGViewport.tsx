@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import OHIF, { utils } from '@ohif/core';
 import {
   Notification,
-  ViewportActionBar,
+  LegacyViewportActionBar,
   useViewportGrid,
   useViewportDialog,
   LoadingIndicatorProgress,
@@ -321,7 +321,7 @@ function OHIFCornerstoneSEGViewport(props) {
 
   return (
     <>
-      <ViewportActionBar
+      <LegacyViewportActionBar
         onDoubleClick={evt => {
           evt.stopPropagation();
           evt.preventDefault();

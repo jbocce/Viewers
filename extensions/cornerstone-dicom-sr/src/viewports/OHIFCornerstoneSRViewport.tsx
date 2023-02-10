@@ -6,7 +6,7 @@ import { setTrackingUniqueIdentifiersForElement } from '../tools/modules/dicomSR
 
 import {
   Notification,
-  ViewportActionBar,
+  LegacyViewportActionBar,
   useViewportGrid,
   useViewportDialog,
   Tooltip,
@@ -359,7 +359,7 @@ function OHIFCornerstoneSRViewport(props) {
   // TODO -> disabled double click for now: onDoubleClick={_onDoubleClick}
   return (
     <>
-      <ViewportActionBar
+      <LegacyViewportActionBar
         onDoubleClick={evt => {
           evt.stopPropagation();
           evt.preventDefault();
