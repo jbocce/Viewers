@@ -11,7 +11,7 @@ const classes = {
   row: 'flex flex-col ml-4',
 };
 
-function PatientInfo({
+function LegacyPatientInfo({
   patientName,
   patientSex,
   patientAge,
@@ -134,7 +134,7 @@ function PatientInfo({
   );
 }
 
-PatientInfo.propTypes = {
+LegacyPatientInfo.propTypes = {
   patientName: PropTypes.string,
   patientSex: PropTypes.string,
   patientAge: PropTypes.string,
@@ -146,4 +146,4 @@ PatientInfo.propTypes = {
   showPatientInfoRef: PropTypes.object,
 };
 
-export default PatientInfo;
+export default LegacyPatientInfo;

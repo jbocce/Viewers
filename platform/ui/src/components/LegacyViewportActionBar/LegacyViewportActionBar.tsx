@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, ButtonGroup, Button, LegacyCinePlayer } from '../';
 import useOnClickOutside from '../../utils/useOnClickOutside';
-import PatientInfo from '../PatientInfo';
+import LegacyPatientInfo from '../LegacyPatientInfo';
 import { StringNumber } from '../../types';
 
 const LegacyViewportActionBar = ({
@@ -126,7 +126,7 @@ const LegacyViewportActionBar = ({
         </div>
       )}
       <div className="flex h-8 mt-2 ml-4 mr-2" onClick={onPatientInfoClick}>
-        <PatientInfo
+        <LegacyPatientInfo
           showPatientInfoRef={showPatientInfoRef}
           isOpen={showPatientInfo}
           patientName={patientName}
