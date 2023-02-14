@@ -68,6 +68,7 @@ import InputRange from './InputRange';
 import InputNumber from './InputNumber';
 import CheckBox from './CheckBox';
 import LoadingIndicatorProgress from './LoadingIndicatorProgress';
+import ViewportActionBar from './ViewportActionBar';
 
 export {
   AboutModal,
@@ -78,7 +79,6 @@ export {
   Button,
   ButtonGroup,
   ContextMenu,
-  LegacyCinePlayer,
   CheckBox,
   DateRange,
   Dialog,
@@ -100,6 +100,8 @@ export {
   ImageScrollbar,
   Label,
   LayoutSelector,
+  LegacyCinePlayer,
+  LegacyViewportActionBar,
   LoadingIndicatorProgress,
   MeasurementTable,
   Modal,
@@ -135,7 +137,7 @@ export {
   TooltipClipboard,
   Typography,
   Viewport,
-  LegacyViewportActionBar,
+  ViewportActionBar,
   ViewportDownloadForm,
   ViewportGrid,
   ViewportPane,

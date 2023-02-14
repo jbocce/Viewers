@@ -4,7 +4,7 @@ import OHIF, { utils } from '@ohif/core';
 
 import {
   Notification,
-  LegacyViewportActionBar,
+  ViewportActionBar,
   useCine,
   useViewportGrid,
   useViewportDialog,
@@ -196,7 +196,7 @@ function TrackedCornerstoneViewport(props) {
 
   return (
     <>
-      <LegacyViewportActionBar
+      <ViewportActionBar
         onDoubleClick={evt => {
           evt.stopPropagation();
           evt.preventDefault();
@@ -225,22 +225,6 @@ function TrackedCornerstoneViewport(props) {
                 : '',
             scanner: ManufacturerModelName || '',
           },
-        }}
-        showNavArrows={!isCineEnabled}
-        showCine={isCineEnabled}
-        cineProps={{
-          isPlaying,
-          onClose: () => commandsManager.runCommand('toggleCine'),
-          onPlayPauseChange: isPlaying =>
-            cineService.setCine({
-              id: activeViewportIndex,
-              isPlaying,
-            }),
-          onFrameRateChange: frameRate =>
-            cineService.setCine({
-              id: activeViewportIndex,
-              frameRate,
-            }),
         }}
       />
       {/* TODO: Viewport interface to accept stack or layers of content like this? */}
@@ -329,7 +313,7 @@ function _getNextMeasurementUID(
 }
 
 function _getStatusComponent(isTracked) {
-  const trackedIcon = isTracked ? 'tracked' : 'dotted-circle';
+  const trackedIcon = isTracked ? 'status-tracked' : 'status-untracked';
 
   return (
     <div className="relative">
@@ -361,7 +345,7 @@ function _getStatusComponent(isTracked) {
           </div>
         }
       >
-        <Icon name={trackedIcon} className="w-6 text-primary-light" />
+        <Icon name={trackedIcon} className="text-primary-light" />
       </Tooltip>
     </div>
   );

@@ -71,7 +71,7 @@ function TrackedCornerstoneViewport({
 
   return (
     <>
-      <LegacyViewportActionBar onDoubleClick onArrowsClick />
+      <ViewportActionBar onDoubleClick onArrowsClick />
       <div className="relative flex flex-row w-full h-full overflow-hidden">
         {renderViewport()}
       </div>

@@ -6,7 +6,7 @@ import { setTrackingUniqueIdentifiersForElement } from '../tools/modules/dicomSR
 
 import {
   Notification,
-  LegacyViewportActionBar,
+  ViewportActionBar,
   useViewportGrid,
   useViewportDialog,
   Tooltip,
@@ -32,8 +32,6 @@ function OHIFCornerstoneSRViewport(props) {
     servicesManager,
     extensionManager,
   } = props;
-
-  const { t } = useTranslation('SRViewport');
 
   const {
     displaySetService,
@@ -359,7 +357,7 @@ function OHIFCornerstoneSRViewport(props) {
   // TODO -> disabled double click for now: onDoubleClick={_onDoubleClick}
   return (
     <>
-      <LegacyViewportActionBar
+      <ViewportActionBar
         onDoubleClick={evt => {
           evt.stopPropagation();
           evt.preventDefault();
@@ -468,12 +466,15 @@ function _getStatusComponent({
   isLocked,
   sendTrackedMeasurementsEvent,
 }) {
-  const onPillClick = () => {
+  const handleClick = () => {
     sendTrackedMeasurementsEvent('RESTORE_PROMPT_HYDRATE_SR', {
       displaySetInstanceUID: srDisplaySet.displaySetInstanceUID,
       viewportIndex,
     });
   };
+
+  const { t } = useTranslation('SRViewport');
+  const loadStr = t('Load');
 
   // 1 - Incompatible
   // 2 - Locked
@@ -485,22 +486,7 @@ function _getStatusComponent({
 
   switch (state) {
     case 1:
-      StatusIcon = () => (
-        <div
-          className="flex items-center justify-center -mr-1 rounded-full"
-          style={{
-            width: '18px',
-            height: '18px',
-            backgroundColor: '#98e5c1',
-            border: 'solid 1.5px #000000',
-          }}
-        >
-          <Icon
-            name="exclamation"
-            style={{ color: '#000', width: '12px', height: '12px' }}
-          />
-        </div>
-      );
+      StatusIcon = () => <Icon name="status-alert" />;
 
       ToolTipMessage = () => (
         <div>
@@ -511,20 +497,7 @@ function _getStatusComponent({
       );
       break;
     case 2:
-      StatusIcon = () => (
-        <div
-          className="flex items-center justify-center -mr-1 bg-black rounded-full"
-          style={{
-            width: '18px',
-            height: '18px',
-          }}
-        >
-          <Icon
-            name="lock"
-            style={{ color: '#05D97C', width: '8px', height: '11px' }}
-          />
-        </div>
-      );
+      StatusIcon = () => <Icon name="status-locked" />;
 
       ToolTipMessage = () => (
         <div>
@@ -537,48 +510,27 @@ function _getStatusComponent({
       );
       break;
     case 3:
-      StatusIcon = () => (
-        <div
-          className="flex items-center justify-center -mr-1 bg-white rounded-full group-hover:bg-customblue-200"
-          style={{
-            width: '18px',
-            height: '18px',
-            border: 'solid 1.5px #000000',
-          }}
-        >
-          <Icon
-            name="arrow-left"
-            style={{ color: '#000', width: '14px', height: '14px' }}
-          />
-        </div>
-      );
+      StatusIcon = () => <Icon name="status-untracked" />;
 
-      ToolTipMessage = () => <div>Click to restore measurements.</div>;
+      ToolTipMessage = () => (
+        <div>{`Click ${loadStr} to restore measurements.`}</div>
+      );
   }
 
-  const StatusPill = () => (
-    <div
-      className={classNames(
-        'group relative flex items-center justify-center px-2 rounded-full cursor-default bg-customgreen-100',
-        {
-          'hover:bg-customblue-100': state === 3,
-          'cursor-pointer': state === 3,
-        }
+  const StatusArea = () => (
+    <div className="flex h-6 leading-6 cursor-default text-sm text-white">
+      <div className="min-w-[45px] flex items-center p-1 rounded-l-xl rounded-r bg-customgray-100">
+        <StatusIcon />
+        <span className="ml-1">SR</span>
+      </div>
+      {state === 3 && (
+        <div
+          className="ml-1 px-1.5 rounded cursor-pointer hover:text-black bg-primary-main hover:bg-primary-light"
+          onClick={handleClick}
+        >
+          {loadStr}
+        </div>
       )}
-      style={{
-        height: '24px',
-        width: '55px',
-      }}
-      onClick={() => {
-        if (state === 3) {
-          if (onPillClick) {
-            onPillClick();
-          }
-        }
-      }}
-    >
-      <span className="pr-1 text-lg font-bold leading-none text-black">SR</span>
-      <StatusIcon />
     </div>
   );
 
@@ -586,22 +538,12 @@ function _getStatusComponent({
     <>
       {ToolTipMessage && (
         <Tooltip content={<ToolTipMessage />} position="bottom-left">
-          <StatusPill />
+          <StatusArea />
         </Tooltip>
       )}
-      {!ToolTipMessage && <StatusPill />}
+      {!ToolTipMessage && <StatusArea />}
     </>
   );
 }
-
-// function _onDoubleClick() {
-//   const cancelActiveManipulatorsForElement = cornerstoneTools.getModule(
-//     'manipulatorState'
-//   ).setters.cancelActiveManipulatorsForElement;
-//   const enabledElements = cornerstoneTools.store.state.enabledElements;
-//   enabledElements.forEach(element => {
-//     cancelActiveManipulatorsForElement(element);
-//   });
-// }
 
 export default OHIFCornerstoneSRViewport;
