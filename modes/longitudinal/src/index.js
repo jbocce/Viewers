@@ -90,6 +90,7 @@ function modeFactory() {
               commandName: 'setToolActive',
               commandOptions: {
                 toolName: 'WindowLevel',
+                toolGroupId: 'mpr',
               },
               context: 'CORNERSTONE',
             },

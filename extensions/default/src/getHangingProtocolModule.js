@@ -1,70 +1,136 @@
-const defaultProtocol = {
+const mpr = {
   id: 'default',
   locked: true,
   hasUpdatedPriorsInformation: false,
-  name: 'Default',
+  name: 'mpr',
   createdDate: '2021-02-23T19:22:08.894Z',
-  modifiedDate: '2021-02-23T19:22:08.894Z',
+  modifiedDate: '2022-10-04T19:22:08.894Z',
   availableTo: {},
   editableBy: {},
   protocolMatchingRules: [],
-  toolGroupIds: ['default'],
+  imageLoadStrategy: 'nth',
   displaySetSelectors: {
-    defaultDisplaySetId: {
-      // Unused currently
-      imageMatchingRules: [],
-      // Matches displaysets, NOT series
+    mprDisplaySet: {
       seriesMatchingRules: [
-        // Try to match series with images by default, to prevent weird display
-        // on SEG/SR containing studies
         {
-          attribute: 'numImageFrames',
+          weight: 1,
+          attribute: 'isReconstructable',
           constraint: {
-            greaterThan: { value: 0 },
+            equals: {
+              value: true,
+            },
           },
+          required: true,
         },
       ],
-      studyMatchingRules: [],
     },
   },
   stages: [
     {
-      id: 'hYbmMy3b7pz7GLiaT',
-      name: 'default',
+      id: 'mpr3Stage',
+      name: 'mpr',
       viewportStructure: {
         layoutType: 'grid',
         properties: {
-          rows: 1,
-          columns: 1,
+          rows: 2,
+          columns: 2,
         },
       },
       viewports: [
         {
           viewportOptions: {
-            toolGroupId: 'default',
-            // initialImageOptions: {
-            //   index: 180,
-            //   preset: 'middle', // 'first', 'last', 'middle'
-            // },
+            toolGroupId: 'mpr',
+            viewportType: 'volume',
+            orientation: 'axial',
+            initialImageOptions: {
+              preset: 'middle',
+            },
+            syncGroups: [
+              {
+                type: 'voi',
+                id: 'mpr',
+                source: true,
+                target: true,
+              },
+            ],
           },
           displaySets: [
             {
-              id: 'defaultDisplaySetId',
+              id: 'mprDisplaySet',
+            },
+          ],
+        },
+        {
+          viewportOptions: {
+            toolGroupId: 'volume3d',
+            viewportType: 'volume3d',
+            orientation: 'sagittal',
+          },
+          displaySets: [
+            {
+              id: 'mprDisplaySet',
+              options: {
+                presetName: 'CT-Bone',
+              },
+            },
+          ],
+        },
+        {
+          viewportOptions: {
+            toolGroupId: 'mpr',
+            viewportType: 'volume',
+            orientation: 'coronal',
+            initialImageOptions: {
+              preset: 'middle',
+            },
+            syncGroups: [
+              {
+                type: 'voi',
+                id: 'mpr',
+                source: true,
+                target: true,
+              },
+            ],
+          },
+          displaySets: [
+            {
+              id: 'mprDisplaySet',
+            },
+          ],
+        },
+        {
+          viewportOptions: {
+            toolGroupId: 'mpr',
+            viewportType: 'volume',
+            orientation: 'sagittal',
+            initialImageOptions: {
+              preset: 'middle',
+            },
+            syncGroups: [
+              {
+                type: 'voi',
+                id: 'mpr',
+                source: true,
+                target: true,
+              },
+            ],
+          },
+          displaySets: [
+            {
+              id: 'mprDisplaySet',
             },
           ],
         },
       ],
-      createdDate: '2021-02-23T18:32:42.850Z',
     },
   ],
-  numberOfPriorsReferenced: -1,
 };
 
 function getHangingProtocolModule() {
   return [
     {
-      id: defaultProtocol.id,
-      protocol: defaultProtocol,
+      id: 'default',
+      protocol: mpr,
     },
   ];
 }
