@@ -10,6 +10,7 @@ import { createDicomWebApi } from '../DicomWebDataSource/index';
  *
  */
 function createDicomWebProxyApi(
+  extensionManager,
   dicomWebProxyConfig,
   UserAuthenticationService
 ) {
@@ -22,16 +23,16 @@ function createDicomWebProxyApi(
 
       // there seem to be a couple of variations of the case for this parameter
       const queryStudyInstanceUIDs =
-        query.get('studyInstanceUIDs') || query.get('studyInstanceUids');
+        query.get('StudyInstanceUIDs') || query.get('StudyInstanceUids');
       if (!queryStudyInstanceUIDs) {
         throw new Error(`No studyInstanceUids in request for '${name}'`);
       }
 
+      studyInstanceUIDs = queryStudyInstanceUIDs.split(';');
+
       const url = query.get('url');
 
-      if (!url) {
-        throw new Error(`No url for '${name}'`);
-      } else {
+      if (url) {
         const response = await fetch(url);
         let data = await response.json();
         if (!data.servers?.dicomWeb?.[0]) {
@@ -42,7 +43,13 @@ function createDicomWebProxyApi(
           data.servers.dicomWeb[0],
           UserAuthenticationService
         );
-        studyInstanceUIDs = queryStudyInstanceUIDs.split(';');
+        return studyInstanceUIDs;
+      }
+
+      const dataSourceToProxy = query.get('dataSourceToProxy');
+      if (dataSourceToProxy) {
+        const dataSources = extensionManager.getDataSources(dataSourceToProxy);
+        dicomWebDelegate = dataSources?.[0];
       }
       return studyInstanceUIDs;
     },

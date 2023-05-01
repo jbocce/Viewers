@@ -10,7 +10,7 @@ import { createDicomWebProxyApi } from './DicomWebProxyDataSource/index.js';
 /**
  *
  */
-function getDataSourcesModule() {
+function getDataSourcesModule({ extensionManager }) {
   return [
     {
       name: 'dicomweb',
@@ -20,7 +20,7 @@ function getDataSourcesModule() {
     {
       name: 'dicomwebproxy',
       type: 'webApi',
-      createDataSource: createDicomWebProxyApi,
+      createDataSource: createDicomWebProxyApi.bind(this, extensionManager),
     },
     {
       name: 'dicomjson',

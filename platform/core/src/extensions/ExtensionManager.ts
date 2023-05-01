@@ -85,7 +85,7 @@ export default class ExtensionManager {
     this.dataSourceMap = {};
     this.dataSourceDefs = {};
     this.defaultDataSourceName = appConfig.defaultDataSourceName;
-    this.activeDataSource = undefined;
+    this.activeDataSource = appConfig.defaultDataSourceName;
   }
 
   public setActiveDataSource(dataSourceName: string): void {
@@ -382,6 +382,28 @@ export default class ExtensionManager {
       }
     });
   };
+
+  addDataSource(dataSource) {
+    const module = this.getModuleEntry(dataSource.namespace);
+
+    if (!module) {
+      return;
+    }
+
+    const { userAuthenticationService } = this._servicesManager.services;
+    const dataSourceInstance = module.createDataSource(
+      dataSource.configuration,
+      userAuthenticationService
+    );
+
+    if (this.dataSourceMap[dataSource.sourceName]) {
+      this.dataSourceMap[dataSource.sourceName].push(dataSourceInstance);
+    } else {
+      this.dataSourceMap[dataSource.sourceName] = [dataSourceInstance];
+    }
+
+    return dataSourceInstance;
+  }
 
   _initDataSourcesModule(extensionModule, extensionId, dataSources = []) {
     const { userAuthenticationService } = this._servicesManager.services;

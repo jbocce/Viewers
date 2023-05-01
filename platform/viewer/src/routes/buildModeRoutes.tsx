@@ -66,8 +66,6 @@ export default function buildModeRoutes({
       });
     });
 
-    const defaultDataSourceName = extensionManager.defaultDataSourceName;
-
     // Add default DataSource route.
     const path = `/${mode.routeName}`;
 
@@ -75,7 +73,6 @@ export default function buildModeRoutes({
     const children = () => (
       <ModeRoute
         mode={mode}
-        dataSourceName={defaultDataSourceName}
         extensionManager={extensionManager}
         servicesManager={servicesManager}
         commandsManager={commandsManager}

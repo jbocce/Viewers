@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // TODO: DicomMetadataStore should be injected?
 import { DicomMetadataStore, ServicesManager, utils } from '@ohif/core';
 import { DragAndDropProvider, ImageViewerProvider } from '@ohif/ui';
-import { useQuery, useSearchParams } from '@hooks';
+import { useSearchParams } from '@hooks';
 import ViewportGrid from '@components/ViewportGrid';
 import Compose from './Compose';
 import getStudies from './studiesList';
@@ -94,11 +94,17 @@ export default function ModeRoute({
 }) {
   // Parse route params/querystring
   const location = useLocation();
-  const query = useQuery();
-  const params = useParams();
-  const searchParams = useSearchParams();
 
-  const runTimeHangingProtocolId = searchParams.get('hangingprotocolid');
+  // The react router DOM placeholder map (see https://reactrouter.com/en/main/hooks/use-params).
+  const params = useParams();
+  // The URL's query search parameters where the keys casing is maintained
+  const query = useSearchParams();
+  // The URL's query search parameters where the keys are all lower case.
+  const lowerCaseSearchParams = useSearchParams(true);
+
+  const runTimeHangingProtocolId = lowerCaseSearchParams.get(
+    'hangingprotocolid'
+  );
   const [studyInstanceUIDs, setStudyInstanceUIDs] = useState();
 
   const [refresh, setRefresh] = useState(false);
@@ -129,11 +135,9 @@ export default function ModeRoute({
   const hotkeys = Array.isArray(hotkeyObj) ? hotkeyObj : hotkeyObj?.hotkeys;
   const hotkeyName = hotkeyObj?.name || 'hotkey-definitions-v2';
 
-  if (dataSourceName === undefined) {
-    dataSourceName = extensionManager.defaultDataSourceName;
+  if (dataSourceName !== undefined) {
+    extensionManager.setActiveDataSource(dataSourceName);
   }
-
-  extensionManager.setActiveDataSource(dataSourceName);
 
   const dataSource = extensionManager.getActiveDataSource()[0];
 

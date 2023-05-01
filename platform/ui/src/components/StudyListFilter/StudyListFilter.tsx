@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import { Button, Icon, Typography, InputGroup } from '../';
+import { useModal } from '@ohif/ui';
+import CloudServerDataSource from './CloudServerDataSource';
 
 const StudyListFilter = ({
   filtersMeta,
@@ -12,6 +14,7 @@ const StudyListFilter = ({
   isFiltering,
   numOfStudies,
   onUploadClick,
+  onDataSourceAdd,
 }) => {
   const { t } = useTranslation('StudyList');
   const { sortBy, sortDirection } = filterValues;
@@ -24,6 +27,20 @@ const StudyListFilter = ({
   };
   const isSortingEnabled = numOfStudies > 0 && numOfStudies <= 100;
 
+  const { show, hide } = useModal();
+
+  const dataSourceProps = {
+    title: 'Add Data Source',
+    closeButton: true,
+    shouldCloseOnEsc: false,
+    shouldCloseOnOverlayClick: false,
+    content: CloudServerDataSource.bind(null, {
+      onDataSourceAdd: ds => {
+        hide();
+        onDataSourceAdd(ds);
+      },
+    }),
+  };
   return (
     <React.Fragment>
       <div>
@@ -43,6 +60,12 @@ const StudyListFilter = ({
                     <span>Upload</span>
                   </div>
                 )}
+                <div
+                  className="flex items-center ml-4 gap-2 cursor-pointer text-primary-active text-lg self-center font-semibold"
+                  onClick={() => show(dataSourceProps)}
+                >
+                  <span>Cloud Server Data Source</span>
+                </div>
               </div>
               <div className="flex flex-row">
                 {isFiltering && (

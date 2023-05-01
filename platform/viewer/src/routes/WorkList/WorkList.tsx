@@ -48,6 +48,7 @@ function WorkList({
   hotkeysManager,
   dataPath,
   onRefresh,
+  onDataSourceAdd,
   servicesManager,
 }) {
   const { hotkeyDefinitions, hotkeyDefaults } = hotkeysManager;
@@ -475,6 +476,7 @@ function WorkList({
           clearFilters={() => setFilterValues(defaultFilterValues)}
           isFiltering={isFiltering(filterValues, defaultFilterValues)}
           onUploadClick={uploadProps ? () => show(uploadProps) : undefined}
+          onDataSourceAdd={onDataSourceAdd}
         />
         {hasStudies ? (
           <>
