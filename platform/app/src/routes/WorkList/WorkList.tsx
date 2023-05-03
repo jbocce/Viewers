@@ -49,6 +49,7 @@ function WorkList({
   dataPath,
   onRefresh,
   servicesManager,
+  extensionManager,
 }) {
   const { hotkeyDefinitions, hotkeyDefaults } = hotkeysManager;
   const { show, hide } = useModal();
@@ -494,6 +495,8 @@ function WorkList({
           onChange={setFilterValues}
           clearFilters={() => setFilterValues(defaultFilterValues)}
           isFiltering={isFiltering(filterValues, defaultFilterValues)}
+          extensionManager={extensionManager}
+          servicesManager={servicesManager}
           onUploadClick={uploadProps ? () => show(uploadProps) : undefined}
         />
         {hasStudies ? (

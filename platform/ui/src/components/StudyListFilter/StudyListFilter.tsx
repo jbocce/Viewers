@@ -6,6 +6,9 @@ import LegacyButton from '../LegacyButton';
 import Icon from '../Icon';
 import Typography from '../Typography';
 import InputGroup from '../InputGroup';
+import { useModal } from '@ohif/ui';
+import CloudServerDataSource from './CloudServerDataSource';
+import { ExtensionManager, ServicesManager } from '@ohif/core';
 
 const StudyListFilter = ({
   filtersMeta,
@@ -14,6 +17,8 @@ const StudyListFilter = ({
   clearFilters,
   isFiltering,
   numOfStudies,
+  servicesManager,
+  extensionManager,
   onUploadClick,
 }) => {
   const { t } = useTranslation('StudyList');
@@ -26,6 +31,26 @@ const StudyListFilter = ({
     });
   };
   const isSortingEnabled = numOfStudies > 0 && numOfStudies <= 100;
+
+  const { show, hide } = useModal();
+
+  const dataSourceProps = {
+    title: 'Add Data Source',
+    closeButton: true,
+    shouldCloseOnEsc: false,
+    shouldCloseOnOverlayClick: false,
+    content: CloudServerDataSource.bind(null, {
+      extensionManager,
+      onDataSourceAdd: ds => {
+        hide();
+      },
+    }),
+  };
+
+  const { customizationService } = servicesManager.services;
+
+  const { component: addDataSourceComponent } =
+    customizationService.get('addDataSourceComponent') ?? {};
 
   return (
     <React.Fragment>
@@ -46,6 +71,13 @@ const StudyListFilter = ({
                     <span>Upload</span>
                   </div>
                 )}
+                <div
+                  className="flex items-center ml-4 gap-2 cursor-pointer text-primary-active text-lg self-center font-semibold"
+                  onClick={() => show(dataSourceProps)}
+                >
+                  <span>Cloud Server Data Source</span>
+                </div>
+                {addDataSourceComponent && addDataSourceComponent()}
               </div>
               <div className="flex flex-row">
                 {/* TODO revisit the completely rounded style of button used for clearing the study list filter - for now use LegacyButton*/}
@@ -134,6 +166,8 @@ StudyListFilter.propTypes = {
   clearFilters: PropTypes.func.isRequired,
   isFiltering: PropTypes.bool.isRequired,
   onUploadClick: PropTypes.func,
+  extensionManager: PropTypes.instanceOf(ExtensionManager),
+  servicesManager: PropTypes.instanceOf(ServicesManager),
 };
 
 export default StudyListFilter;

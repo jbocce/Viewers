@@ -1,10 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { MODULE_TYPES } from '@ohif/core';
+import { ExtensionManager, MODULE_TYPES } from '@ohif/core';
 //
 import { extensionManager } from '../App.tsx';
 import { useParams, useLocation } from 'react-router';
+import useSearchParams from '../hooks/useSearchParams.js';
 
 /**
  * Uses route properties to determine the data source that should be passed
@@ -18,36 +19,62 @@ function DataSourceWrapper(props) {
   const { children: LayoutTemplate, ...rest } = props;
   const params = useParams();
   const location = useLocation();
+  const lowerCaseSearchParams = useSearchParams(true);
 
-  // TODO - get the variable from the props all the time...
-  let dataSourceName = new URLSearchParams(location.search).get('datasources');
-  const dataPath = dataSourceName ? `/${dataSourceName}` : '';
+  const getInitialDataSourceName = useCallback(() => {
+    // TODO - get the variable from the props all the time...
+    let dataSourceName = lowerCaseSearchParams.get('datasources');
 
-  if (!dataSourceName && window.config.defaultDataSourceName) {
-    dataSourceName = window.config.defaultDataSourceName;
-  } else if (!dataSourceName) {
-    // Gets the first defined datasource with the right name
-    // Mostly for historical reasons - new configs should use the defaultDataSourceName
-    const dataSourceModules =
-      extensionManager.modules[MODULE_TYPES.DATA_SOURCE];
-    // TODO: Good usecase for flatmap?
-    const webApiDataSources = dataSourceModules.reduce((acc, curr) => {
-      const mods = [];
-      curr.module.forEach(mod => {
-        if (mod.type === 'webApi') {
-          mods.push(mod);
-        }
-      });
-      return acc.concat(mods);
-    }, []);
-    dataSourceName = webApiDataSources
-      .map(ds => ds.name)
-      .find(it => extensionManager.getDataSources(it)?.[0] !== undefined);
-  }
-  const dataSource = extensionManager.getDataSources(dataSourceName)?.[0];
-  if (!dataSource) {
-    throw new Error(`No data source found for ${dataSourceName}`);
-  }
+    if (!dataSourceName && window.config.defaultDataSourceName) {
+      return '';
+    }
+
+    if (!dataSourceName) {
+      // Gets the first defined datasource with the right name
+      // Mostly for historical reasons - new configs should use the defaultDataSourceName
+      const dataSourceModules =
+        extensionManager.modules[MODULE_TYPES.DATA_SOURCE];
+      // TODO: Good usecase for flatmap?
+      const webApiDataSources = dataSourceModules.reduce((acc, curr) => {
+        const mods = [];
+        curr.module.forEach(mod => {
+          if (mod.type === 'webApi') {
+            mods.push(mod);
+          }
+        });
+        return acc.concat(mods);
+      }, []);
+      dataSourceName = webApiDataSources
+        .map(ds => ds.name)
+        .find(it => extensionManager.getDataSources(it)?.[0] !== undefined);
+    }
+
+    return dataSourceName;
+  }, []);
+
+  const getInitialDataPath = useCallback(() => {
+    const dataSourceName = getInitialDataSourceName();
+    return dataSourceName ? `/${dataSourceName}` : '';
+  }, [getInitialDataSourceName]);
+
+  const [dataPath, setDataPath] = useState(getInitialDataPath());
+
+  const getInitialDataSource = useCallback(() => {
+    const dataSourceName = getInitialDataSourceName();
+
+    if (!dataSourceName) {
+      return extensionManager.getActiveDataSource()[0];
+    }
+
+    const dataSource = extensionManager.getDataSources(dataSourceName)?.[0];
+    if (!dataSource) {
+      throw new Error(`No data source found for ${dataSourceName}`);
+    }
+
+    return dataSource;
+  }, [getInitialDataSourceName]);
+
+  const [dataSource, setDataSource] = useState(getInitialDataSource());
 
   // Route props --> studies.mapParams
   // mapParams --> studies.search
@@ -65,6 +92,20 @@ function DataSourceWrapper(props) {
   };
   const [data, setData] = useState(DEFAULT_DATA);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const dataSourceChangedCallback = () => {
+      setDataPath('');
+      setDataSource(extensionManager.getActiveDataSource()[0]);
+      setData(DEFAULT_DATA);
+    };
+
+    const sub = extensionManager.subscribe(
+      ExtensionManager.EVENTS.ACTIVE_DATA_SOURCE_CHANGED,
+      dataSourceChangedCallback
+    );
+    return () => sub.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const queryFilterValues = _getQueryFilterValues(
@@ -114,7 +155,7 @@ function DataSourceWrapper(props) {
       console.warn(ex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, location, params, isLoading, setIsLoading]);
+  }, [data, location, params, isLoading, setIsLoading, dataSource]);
   // queryFilterValues
 
   // TODO: Better way to pass DataSource?

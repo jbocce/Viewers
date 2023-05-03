@@ -1,0 +1,256 @@
+diff --git a/platform/core/src/extensions/ExtensionManager.ts b/platform/core/src/extensions/ExtensionManager.ts
+index c028fbab3..d48452d6b 100644
+--- a/platform/core/src/extensions/ExtensionManager.ts
++++ b/platform/core/src/extensions/ExtensionManager.ts
+@@ -85,7 +85,7 @@ export default class ExtensionManager {
+     this.dataSourceMap = {};
+     this.dataSourceDefs = {};
+     this.defaultDataSourceName = appConfig.defaultDataSourceName;
+-    this.activeDataSource = undefined;
++    this.activeDataSource = appConfig.defaultDataSourceName;
+   }
+ 
+   public setActiveDataSource(dataSourceName: string): void {
+diff --git a/platform/viewer/src/hooks/index.js b/platform/viewer/src/hooks/index.js
+index 0660f2611..d5889fa39 100644
+--- a/platform/viewer/src/hooks/index.js
++++ b/platform/viewer/src/hooks/index.js
+@@ -1,5 +1,4 @@
+ import useDebounce from './useDebounce.js';
+-import useQuery from './useQuery.js';
+ import useSearchParams from './useSearchParams.js';
+ 
+-export { useDebounce, useQuery, useSearchParams };
++export { useDebounce, useSearchParams };
+diff --git a/platform/viewer/src/hooks/useQuery.js b/platform/viewer/src/hooks/useQuery.js
+deleted file mode 100644
+index 53cd66595..000000000
+--- a/platform/viewer/src/hooks/useQuery.js
++++ /dev/null
+@@ -1,5 +0,0 @@
+-import { useLocation } from 'react-router-dom';
+-
+-export default function useQuery() {
+-  return new URLSearchParams(useLocation().search);
+-}
+diff --git a/platform/viewer/src/hooks/useSearchParams.js b/platform/viewer/src/hooks/useSearchParams.js
+index c7cd0aee8..3f91fabad 100644
+--- a/platform/viewer/src/hooks/useSearchParams.js
++++ b/platform/viewer/src/hooks/useSearchParams.js
+@@ -1,17 +1,23 @@
+-import useQuery from './useQuery';
++import { useLocation } from 'react-router';
+ 
+ /**
+- * It returns a Map of the query parameters in the URL, where the keys are
+- * lowercase
+- * @returns A function that returns a Map of the query parameters.
++ * It returns a URLSearchParams of the query parameters in the URL, where the keys are
++ * either lowercase or maintain their case based on the lowerCaseKeys parameter.
++ * @param {boolean} lowerCaseKeys true to return lower case keys; false (default) to maintain casing;
++ * @returns {URLSearchParams}
+  */
+-export default function useSearchParams() {
+-  const query = useQuery();
+-  // make query params case-insensitive
+-  const searchParams = new Map();
+-  for (const [key, value] of query) {
+-    searchParams.set(key.toLowerCase(), value);
++export default function useSearchParams(lowerCaseKeys = false) {
++  const searchParams = new URLSearchParams(useLocation().search);
++
++  if (!lowerCaseKeys) {
++    return searchParams;
++  }
++
++  const lowerCaseSearchParams = new URLSearchParams();
++
++  for (const [key, value] of searchParams) {
++    lowerCaseSearchParams.set(key.toLowerCase(), value);
+   }
+ 
+-  return searchParams;
++  return lowerCaseSearchParams;
+ }
+diff --git a/platform/viewer/src/routes/DataSourceWrapper.tsx b/platform/viewer/src/routes/DataSourceWrapper.tsx
+index d5357875e..c1d24198e 100644
+--- a/platform/viewer/src/routes/DataSourceWrapper.tsx
++++ b/platform/viewer/src/routes/DataSourceWrapper.tsx
+@@ -1,5 +1,5 @@
+ /* eslint-disable react/jsx-props-no-spreading */
+-import React, { useEffect, useState } from 'react';
++import React, { useCallback, useEffect, useState } from 'react';
+ import PropTypes from 'prop-types';
+ import { MODULE_TYPES } from '@ohif/core';
+ //
+@@ -19,35 +19,62 @@ function DataSourceWrapper(props) {
+   const params = useParams();
+   const location = useLocation();
+ 
+-  // TODO - get the variable from the props all the time...
+-  let dataSourceName = new URLSearchParams(location.search).get('datasources');
+-  const dataPath = dataSourceName ? `/${dataSourceName}` : '';
+-
+-  if (!dataSourceName && window.config.defaultDataSourceName) {
+-    dataSourceName = window.config.defaultDataSourceName;
+-  } else if (!dataSourceName) {
+-    // Gets the first defined datasource with the right name
+-    // Mostly for historical reasons - new configs should use the defaultDataSourceName
+-    const dataSourceModules =
+-      extensionManager.modules[MODULE_TYPES.DATA_SOURCE];
+-    // TODO: Good usecase for flatmap?
+-    const webApiDataSources = dataSourceModules.reduce((acc, curr) => {
+-      const mods = [];
+-      curr.module.forEach(mod => {
+-        if (mod.type === 'webApi') {
+-          mods.push(mod);
+-        }
+-      });
+-      return acc.concat(mods);
+-    }, []);
+-    dataSourceName = webApiDataSources
+-      .map(ds => ds.name)
+-      .find(it => extensionManager.getDataSources(it)?.[0] !== undefined);
+-  }
+-  const dataSource = extensionManager.getDataSources(dataSourceName)?.[0];
+-  if (!dataSource) {
+-    throw new Error(`No data source found for ${dataSourceName}`);
+-  }
++  const getInitialDataSourceName = useCallback(() => {
++    // TODO - get the variable from the props all the time...
++    let dataSourceName = new URLSearchParams(location.search).get(
++      'datasources'
++    );
++
++    if (!dataSourceName && window.config.defaultDataSourceName) {
++      return '';
++    }
++
++    if (!dataSourceName) {
++      // Gets the first defined datasource with the right name
++      // Mostly for historical reasons - new configs should use the defaultDataSourceName
++      const dataSourceModules =
++        extensionManager.modules[MODULE_TYPES.DATA_SOURCE];
++      // TODO: Good usecase for flatmap?
++      const webApiDataSources = dataSourceModules.reduce((acc, curr) => {
++        const mods = [];
++        curr.module.forEach(mod => {
++          if (mod.type === 'webApi') {
++            mods.push(mod);
++          }
++        });
++        return acc.concat(mods);
++      }, []);
++      dataSourceName = webApiDataSources
++        .map(ds => ds.name)
++        .find(it => extensionManager.getDataSources(it)?.[0] !== undefined);
++    }
++
++    return dataSourceName;
++  }, []);
++
++  const getInitialDataPath = useCallback(() => {
++    const dataSourceName = getInitialDataSourceName();
++    return dataSourceName ? `/${dataSourceName}` : '';
++  }, [getInitialDataSourceName]);
++
++  const [dataPath, setDataPath] = useState(getInitialDataPath());
++
++  const getInitialDataSource = useCallback(() => {
++    const dataSourceName = getInitialDataSourceName();
++
++    if (!dataSourceName) {
++      return extensionManager.getActiveDataSource()[0];
++    }
++
++    const dataSource = extensionManager.getDataSources(dataSourceName)?.[0];
++    if (!dataSource) {
++      throw new Error(`No data source found for ${dataSourceName}`);
++    }
++
++    return dataSource;
++  }, [getInitialDataSourceName]);
++
++  const [dataSource, setDataSource] = useState(getInitialDataSource());
+ 
+   // Route props --> studies.mapParams
+   // mapParams --> studies.search
+@@ -114,7 +141,7 @@ function DataSourceWrapper(props) {
+       console.warn(ex);
+     }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [data, location, params, isLoading, setIsLoading]);
++  }, [data, location, params, isLoading, setIsLoading, dataSource]);
+   // queryFilterValues
+ 
+   // TODO: Better way to pass DataSource?
+diff --git a/platform/viewer/src/routes/Mode/Mode.tsx b/platform/viewer/src/routes/Mode/Mode.tsx
+index 7e7575bc0..bded4a4f1 100644
+--- a/platform/viewer/src/routes/Mode/Mode.tsx
++++ b/platform/viewer/src/routes/Mode/Mode.tsx
+@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
+ // TODO: DicomMetadataStore should be injected?
+ import { DicomMetadataStore, ServicesManager, utils } from '@ohif/core';
+ import { DragAndDropProvider, ImageViewerProvider } from '@ohif/ui';
+-import { useQuery, useSearchParams } from '@hooks';
++import { useSearchParams } from '@hooks';
+ import ViewportGrid from '@components/ViewportGrid';
+ import Compose from './Compose';
+ import getStudies from './studiesList';
+@@ -94,11 +94,17 @@ export default function ModeRoute({
+ }) {
+   // Parse route params/querystring
+   const location = useLocation();
+-  const query = useQuery();
++
++  // The react router DOM placeholder map (see https://reactrouter.com/en/main/hooks/use-params).
+   const params = useParams();
+-  const searchParams = useSearchParams();
++  // The URL's query search parameters where the keys casing is maintained
++  const query = useSearchParams();
++  // The URL's query search parameters where the keys are all lower case.
++  const lowerCaseSearchParams = useSearchParams(true);
+ 
+-  const runTimeHangingProtocolId = searchParams.get('hangingprotocolid');
++  const runTimeHangingProtocolId = lowerCaseSearchParams.get(
++    'hangingprotocolid'
++  );
+   const [studyInstanceUIDs, setStudyInstanceUIDs] = useState();
+ 
+   const [refresh, setRefresh] = useState(false);
+@@ -129,12 +135,10 @@ export default function ModeRoute({
+   const hotkeys = Array.isArray(hotkeyObj) ? hotkeyObj : hotkeyObj?.hotkeys;
+   const hotkeyName = hotkeyObj?.name || 'hotkey-definitions-v2';
+ 
+-  if (dataSourceName === undefined) {
+-    dataSourceName = extensionManager.defaultDataSourceName;
++  if (dataSourceName !== undefined) {
++    extensionManager.setActiveDataSource(dataSourceName);
+   }
+ 
+-  extensionManager.setActiveDataSource(dataSourceName);
+-
+   const dataSource = extensionManager.getActiveDataSource()[0];
+ 
+   // Only handling one route per mode for now
+diff --git a/platform/viewer/src/routes/buildModeRoutes.tsx b/platform/viewer/src/routes/buildModeRoutes.tsx
+index e87eb186e..0a3aebe56 100644
+--- a/platform/viewer/src/routes/buildModeRoutes.tsx
++++ b/platform/viewer/src/routes/buildModeRoutes.tsx
+@@ -66,8 +66,6 @@ export default function buildModeRoutes({
+       });
+     });
+ 
+-    const defaultDataSourceName = extensionManager.defaultDataSourceName;
+-
+     // Add default DataSource route.
+     const path = `/${mode.routeName}`;
+ 
+@@ -75,7 +73,6 @@ export default function buildModeRoutes({
+     const children = () => (
+       <ModeRoute
+         mode={mode}
+-        dataSourceName={defaultDataSourceName}
+         extensionManager={extensionManager}
+         servicesManager={servicesManager}
+         commandsManager={commandsManager}
