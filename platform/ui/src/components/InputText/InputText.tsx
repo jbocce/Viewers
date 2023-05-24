@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Input, InputLabelWrapper } from '../';
@@ -12,6 +12,13 @@ const InputText = ({
   value,
   onChange,
 }) => {
+  // Only change the value to the Input if it indeed changes in the props.
+  const [inputValue, setInputValue] = useState(value);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
   return (
     <InputLabelWrapper
       label={label}
@@ -24,8 +31,9 @@ const InputText = ({
         className="mt-2"
         type="text"
         containerClassName="mr-2"
-        value={value}
+        value={inputValue}
         onChange={event => {
+          setInputValue(event.target.value);
           onChange(event.target.value);
         }}
       />
@@ -36,7 +44,7 @@ const InputText = ({
 InputText.defaultProps = {
   value: '',
   isSortable: false,
-  onLabelClick: () => { },
+  onLabelClick: () => {},
   sortDirection: 'none',
 };
 
