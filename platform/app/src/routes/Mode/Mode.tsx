@@ -237,11 +237,11 @@ export default function ModeRoute({
 
     // Todo: this should not be here, data source should not care about params
     const initializeDataSource = async (params, query) => {
-      const studyInstanceUIDs = await dataSource.initialize({
+      await dataSource.initialize({
         params,
         query,
       });
-      setStudyInstanceUIDs(studyInstanceUIDs);
+      setStudyInstanceUIDs(dataSource.getStudyInstanceUIDs({ params, query }));
     };
 
     initializeDataSource(params, query);

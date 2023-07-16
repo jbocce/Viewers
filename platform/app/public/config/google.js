@@ -47,6 +47,18 @@ window.config = {
           'https://healthcare.googleapis.com/v1/projects/ohif-cloud-healthcare/locations/us-east4/datasets/ohif-qa-dataset/dicomStores/ohif-qa-2/dicomWeb',
         wadoRoot:
           'https://healthcare.googleapis.com/v1/projects/ohif-cloud-healthcare/locations/us-east4/datasets/ohif-qa-dataset/dicomStores/ohif-qa-2/dicomWeb',
+        // onConfiguration: (dicomWebConfig, options) => {
+        //   const { params } = options;
+        //   const { project, location, dataset, dicomStore } = params;
+        //   const pathUrl = `https://healthcare.googleapis.com/v1/projects/${project}/locations/${location}/datasets/${dataset}/dicomStores/${dicomStore}/dicomWeb`;
+        //   return {
+        //     ...dicomWebConfig,
+        //     wadoRoot: pathUrl,
+        //     qidoRoot: pathUrl,
+        //     wadoUri: pathUrl,
+        //     wadoUriRoot: pathUrl,
+        //   };
+        // },
         qidoSupportsIncludeField: true,
         imageRendering: 'wadors',
         thumbnailRendering: 'wadors',

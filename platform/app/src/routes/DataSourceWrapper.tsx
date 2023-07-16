@@ -20,6 +20,7 @@ function DataSourceWrapper(props) {
   const params = useParams();
   const location = useLocation();
   const lowerCaseSearchParams = useSearchParams(true);
+  const query = useSearchParams();
 
   const getInitialDataSourceName = useCallback(() => {
     // TODO - get the variable from the props all the time...
@@ -75,6 +76,7 @@ function DataSourceWrapper(props) {
   }, [getInitialDataSourceName]);
 
   const [dataSource, setDataSource] = useState(getInitialDataSource());
+  const [isDataSourceInitialized, setIsDataSourceInitialized] = useState(false);
 
   // Route props --> studies.mapParams
   // mapParams --> studies.search
@@ -93,8 +95,26 @@ function DataSourceWrapper(props) {
   const [data, setData] = useState(DEFAULT_DATA);
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * The effect to initialize the data source whenever it changes. Similar to
+   * whenever a different Mode is entered, the Mode's data source is initiliazed, so
+   * too this DataSourceWrapper must initialize its data source whenever a different
+   * data source is activated. Furthermore, a data source might be initialized
+   * several times as it gets activated/deactivated because the location URL
+   * might change and data sources initialize based on the URL.
+   */
+  useEffect(() => {
+    const initializeDataSource = async () => {
+      await dataSource.initialize({ params, query });
+      setIsDataSourceInitialized(true);
+    };
+
+    initializeDataSource();
+  }, [dataSource]);
+
   useEffect(() => {
     const dataSourceChangedCallback = () => {
+      setIsDataSourceInitialized(false);
       setDataPath('');
       setDataSource(extensionManager.getActiveDataSource()[0]);
       setData(DEFAULT_DATA);
@@ -107,7 +127,19 @@ function DataSourceWrapper(props) {
     return () => sub.unsubscribe();
   }, []);
 
+  const areLocationsTheSame = (location0, location1) => {
+    return (
+      location0.pathname === location1.pathname &&
+      location0.search === location1.search &&
+      location0.hash === location1.hash
+    );
+  };
+
   useEffect(() => {
+    if (!isDataSourceInitialized) {
+      return;
+    }
+
     const queryFilterValues = _getQueryFilterValues(
       location.search,
       STUDIES_LIMIT
@@ -116,6 +148,7 @@ function DataSourceWrapper(props) {
     // 204: no content
     async function getData() {
       setIsLoading(true);
+
       const studies = await dataSource.query.studies.search(queryFilterValues);
 
       setData({
@@ -143,7 +176,12 @@ function DataSourceWrapper(props) {
             STUDIES_LIMIT
         ) *
         (STUDIES_LIMIT - 1);
-      const isLocationUpdated = data.location !== location;
+      // Simply checking data.location !== location is not sufficient because even though the location href (i.e. entire URL)
+      // has not changed, the React Router still provides a new location reference and would result in two study queries
+      // on initial load. Alternatively, window.location.href could be used.
+      const isLocationUpdated =
+        typeof data.location === 'string' ||
+        !areLocationsTheSame(data.location, location);
       const isDataInvalid =
         !isSamePage ||
         (!isLoading && (newOffset !== previousOffset || isLocationUpdated));
@@ -155,7 +193,15 @@ function DataSourceWrapper(props) {
       console.warn(ex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, location, params, isLoading, setIsLoading, dataSource]);
+  }, [
+    data,
+    location,
+    params,
+    isLoading,
+    setIsLoading,
+    dataSource,
+    isDataSourceInitialized,
+  ]);
   // queryFilterValues
 
   // TODO: Better way to pass DataSource?

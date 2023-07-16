@@ -52,7 +52,7 @@ function CloudServerDataSource({
               qidoRoot: url,
               wadoRoot: url,
             };
-            extensionManager.replaceDataSource(dsDefCopy);
+            extensionManager.setDataSource(dsDefCopy);
           } else {
             extensionManager.addDataSource({
               friendlyName: 'Google dcmjs DICOMWeb Server',
@@ -71,8 +71,8 @@ function CloudServerDataSource({
                 supportsWildcard: false,
               },
             });
+            extensionManager.setActiveDataSource(name);
           }
-          extensionManager.setActiveDataSource(name);
           onDataSourceAdd();
         }}
       >

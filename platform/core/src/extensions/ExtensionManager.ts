@@ -94,21 +94,12 @@ export default class ExtensionManager extends PubSubService {
     this.activeDataSource = appConfig.defaultDataSourceName;
   }
 
-  public setActiveDataSource(dataSource: string | DataSourceDefinition): void {
-    if (typeof dataSource === 'string') {
-      this.activeDataSource = dataSource;
-      this._broadcastEvent(
-        ExtensionManager.EVENTS.ACTIVE_DATA_SOURCE_CHANGED,
-        dataSource
-      );
-      return;
-    }
+  public setActiveDataSource(dataSource: string): void {
+    this.activeDataSource = dataSource;
 
-    // this.addDataSource(dataSource);
-    this.activeDataSource = dataSource.sourceName;
     this._broadcastEvent(
       ExtensionManager.EVENTS.ACTIVE_DATA_SOURCE_CHANGED,
-      dataSource.sourceName
+      this.activeDataSource
     );
   }
 
@@ -426,7 +417,7 @@ export default class ExtensionManager extends PubSubService {
     }
   }
 
-  replaceDataSource(dataSource: DataSourceDefinition) {
+  setDataSource(dataSource: DataSourceDefinition) {
     const existingDataSource = this.getDataSources(dataSource.sourceName);
     if (!existingDataSource?.[0]) {
       return;
@@ -447,6 +438,13 @@ export default class ExtensionManager extends PubSubService {
     );
 
     this.dataSourceMap[dataSource.sourceName] = [dataSourceInstance];
+
+    if (this.activeDataSource === dataSource.sourceName) {
+      this._broadcastEvent(
+        ExtensionManager.EVENTS.ACTIVE_DATA_SOURCE_CHANGED,
+        this.activeDataSource
+      );
+    }
   }
 
   _initDataSourcesModule(
