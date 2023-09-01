@@ -7,6 +7,8 @@ import {
 } from '@ohif/ui';
 import { defaults } from '@ohif/core';
 
+export const toggles = {};
+
 const { windowLevelPresets } = defaults;
 /**
  *
@@ -15,7 +17,19 @@ const { windowLevelPresets } = defaults;
  * @param {*} icon
  * @param {*} label
  */
-function _createButton(type, id, icon, label, commands, tooltip, uiType) {
+function _createButton(
+  type,
+  id,
+  icon,
+  label,
+  commands,
+  tooltip,
+  uiType,
+  isActive
+) {
+  if (type === 'toggle' && isActive != null) {
+    toggles[id] = isActive;
+  }
   return {
     id,
     icon,
@@ -243,6 +257,16 @@ const toolbarButtons = [
       icon: 'tool-zoom',
       label: 'Zoom',
       commands: _createSetToolActiveCommands('Zoom'),
+      preClickHook: [
+        {
+          commandName: 'handleActiveViewportChange',
+          commandOptions: {
+            toolName: 'SRCircleROI',
+            toolGroupId: 'SRToolGroup',
+          },
+          context: 'CORNERSTONE',
+        },
+      ],
     },
   },
   // Window Level + Presets...
@@ -440,14 +464,23 @@ const toolbarButtons = [
             },
           ]
         ),
-        // TODO: we need a new icon for image overlay toggler button
-        _createToggleButton('ImageOverlay', 'link', 'Image Overlay', [
-          {
-            commandName: 'toggleImageOverlay',
-            commandOptions: {},
-            context: 'CORNERSTONE',
-          },
-        ]),
+        _createToggleButton(
+          'ImageOverlayViewer',
+          'toggle-dicom-overlay',
+          'Image Overlay',
+          [
+            {
+              commandName: 'setToolActive',
+              commandOptions: {
+                toolName: 'ImageOverlayViewer',
+              },
+              context: 'CORNERSTONE',
+            },
+          ],
+          'Image Overlay',
+          null,
+          true
+        ),
         _createToolButton(
           'StackScroll',
           'tool-stack-scroll',

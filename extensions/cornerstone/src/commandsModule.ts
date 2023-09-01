@@ -294,7 +294,7 @@ function commandsModule({
       toolbarService.recordInteraction(props);
     },
 
-    setToolActive: ({ toolName, toolGroupId = null }) => {
+    setToolActive: ({ toolName, toolGroupId = null, toggledState }) => {
       if (toolName === 'Crosshairs') {
         const activeViewportToolGroup = toolGroupService.getToolGroup(null);
 
@@ -359,6 +359,14 @@ function commandsModule({
           toolGroup.setToolPassive(activeToolName);
         }
       }
+
+      if (toggledState != null) {
+        toggledState
+          ? toolGroup.setToolEnabled(toolName)
+          : toolGroup.setToolDisabled(toolName);
+        return;
+      }
+
       // Set the new toolName to be active
       toolGroup.setToolActive(toolName, {
         bindings: [
@@ -607,6 +615,7 @@ function commandsModule({
 
       if (!toggledState) {
         toolGroup.setToolDisabled(ReferenceLinesTool.toolName);
+        return;
       }
 
       toolGroup.setToolConfiguration(
@@ -646,26 +655,6 @@ function commandsModule({
         };
       }
       stateSyncService.store(storeState);
-    },
-
-    /**
-     * Toggle Image Overlays
-     *
-     * @param param0
-     */
-    toggleImageOverlay: ({ toggledState }) => {
-      const { activeViewportIndex } = viewportGridService.getState();
-      const viewportInfo = cornerstoneViewportService.getViewportInfoByIndex(
-        activeViewportIndex
-      );
-
-      const viewportId = viewportInfo.getViewportId();
-      const toolGroup = toolGroupService.getToolGroupForViewport(viewportId);
-
-      // revert the state because unlike other toggle tools, this starts as enabled
-      toggledState
-        ? toolGroup.setToolDisabled(ImageOverlayViewerTool.toolName)
-        : toolGroup.setToolEnabled(ImageOverlayViewerTool.toolName);
     },
   };
 

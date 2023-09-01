@@ -72,6 +72,7 @@ export default class ToolbarService extends PubSubService {
     const commandsManager = this._commandsManager;
     const { groupId, itemId, interactionType, commands } = interaction;
 
+    /// if preclickhook
     switch (interactionType) {
       case 'action': {
         commands.forEach(({ commandName, commandOptions, context }) => {
@@ -269,13 +270,16 @@ export default class ToolbarService extends PubSubService {
    * @param {object[]} buttons
    * @param {string} buttons[].id
    */
-  addButtons(buttons) {
+  addButtons(buttons, toggles) {
     buttons.forEach(button => {
       if (!this.buttons[button.id]) {
         this.buttons[button.id] = button;
       }
     });
 
+    if (toggles) {
+      this.state.toggles = { ...this.state.toggles, ...toggles };
+    }
     this._broadcastEvent(this.EVENTS.TOOL_BAR_MODIFIED, {});
   }
 
