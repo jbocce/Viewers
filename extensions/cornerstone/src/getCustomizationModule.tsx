@@ -1,6 +1,9 @@
+import React, { ReactElement } from 'react';
 import { Enums } from '@cornerstonejs/tools';
 import { toolNames } from './initCornerstoneTools';
 import DicomUpload from './components/DicomUpload/DicomUpload';
+import PerViewportWindowLevelPresetsComponent from './components/PerViewportWindowLevelPresets/PerViewportWindowLevelPresetsComponent';
+import singleDisplaySetPresets from './components/PerViewportWindowLevelPresets/singleDisplaySetPresets';
 
 const tools = {
   active: [
@@ -21,7 +24,7 @@ const tools = {
   enabled: [{ toolName: toolNames.SegmentationDisplay }],
 };
 
-function getCustomizationModule() {
+function getCustomizationModule({ servicesManager }) {
   return [
     {
       name: 'cornerstoneDicomUploadComponent',
@@ -36,6 +39,21 @@ function getCustomizationModule() {
         {
           id: 'cornerstone.overlayViewportTools',
           tools,
+        },
+        {
+          id: 'cornerstone.perViewportWindowLevelPresetsComponent',
+          component: (props): ReactElement => {
+            return (
+              <PerViewportWindowLevelPresetsComponent
+                {...props}
+                servicesManager={servicesManager}
+              ></PerViewportWindowLevelPresetsComponent>
+            );
+          },
+        },
+        {
+          id: 'cornerstone.windowLevelPresets.singleDisplaySet',
+          presets: singleDisplaySetPresets,
         },
       ],
     },

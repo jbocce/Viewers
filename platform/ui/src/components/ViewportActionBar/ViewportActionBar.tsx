@@ -18,6 +18,7 @@ export type ViewportActionBarProps = {
   onArrowsClick: (arrow: string) => void;
   onDoubleClick: MouseEventHandler;
   getStatusComponent: () => ReactElement;
+  getWindowLevelComponent?: () => ReactElement;
 };
 
 const ViewportActionBar = ({
@@ -25,6 +26,7 @@ const ViewportActionBar = ({
   onArrowsClick,
   onDoubleClick,
   getStatusComponent,
+  getWindowLevelComponent,
 }: ViewportActionBarProps): JSX.Element => {
   const { label, studyDate, seriesDescription, patientInformation } = studyData;
   const { patientName, patientSex, patientAge, MRN, thickness, thicknessUnits, spacing, scanner } =
@@ -147,6 +149,7 @@ const ViewportActionBar = ({
           />
         </>
       )}
+      {getWindowLevelComponent && getWindowLevelComponent()}
       <div
         className={patientInfoClasses()}
         onClick={onPatientInfoClick}

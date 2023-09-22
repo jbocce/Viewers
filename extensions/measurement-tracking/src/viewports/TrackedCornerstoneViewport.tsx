@@ -17,8 +17,12 @@ function TrackedCornerstoneViewport(props) {
 
   const { t } = useTranslation('Common');
 
-  const { measurementService, cornerstoneViewportService, viewportGridService } =
-    servicesManager.services;
+  const {
+    measurementService,
+    cornerstoneViewportService,
+    viewportGridService,
+    customizationService,
+  } = servicesManager.services;
 
   // Todo: handling more than one displaySet on the same viewport
   const displaySet = displaySets[0];
@@ -211,6 +215,7 @@ function TrackedCornerstoneViewport(props) {
         useAltStyling={isTracked}
         onArrowsClick={direction => switchMeasurement(direction)}
         getStatusComponent={() => _getStatusComponent(isTracked)}
+        getWindowLevelComponent={() => _getWindowLevelComponent(customizationService, viewportId)}
         studyData={{
           label: viewportLabel,
           studyDate: formatDate(SeriesDate) || formatDate(StudyDate) || t('NoStudyDate'),
@@ -353,6 +358,12 @@ function _getStatusComponent(isTracked) {
       </Tooltip>
     </div>
   );
+}
+
+function _getWindowLevelComponent(customizationService, viewportId) {
+  return customizationService
+    .get('cornerstone.perViewportWindowLevelPresetsComponent')
+    ?.component({ viewportId });
 }
 
 export default TrackedCornerstoneViewport;
