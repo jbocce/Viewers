@@ -27,6 +27,9 @@ import interleaveTopToBottom from './utils/interleaveTopToBottom';
 import initContextMenu from './initContextMenu';
 import initDoubleClick from './initDoubleClick';
 import { CornerstoneServices } from './types';
+import colormaps from './utils/colormaps';
+
+const { registerColormap } = csUtilities.colormap;
 
 // TODO: Cypress tests are currently grabbing this from the window?
 window.cornerstone = cornerstone;
@@ -264,6 +267,8 @@ export default async function init({
       toolGroup.setToolEnabled(ReferenceLinesTool.toolName);
     }
   );
+
+  colormaps.forEach(registerColormap);
 }
 
 function CPUModal() {
