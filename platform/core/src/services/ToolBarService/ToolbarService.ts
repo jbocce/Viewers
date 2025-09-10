@@ -42,6 +42,9 @@ export const TOOLBAR_SECTIONS = {
   labelMapSegmentationToolbox: 'labelMapSegmentationToolbox',
   contourSegmentationToolbox: 'contourSegmentationToolbox',
   dynamicToolbox: 'dynamic-toolbox',
+  segmentationUtilitiesToolbox: 'segmentationUtilitiesToolbox',
+  labelMapSegmentationUtilitiesToolbox: 'labelMapSegmentationUtilitiesToolbox',
+  contourSegmentationUtilitiesToolbox: 'contourSegmentationUtilitiesToolbox',
   roiThresholdToolbox: 'ROIThresholdToolbox',
 };
 

@@ -4,6 +4,7 @@ import { useActiveViewportSegmentationRepresentations } from '../hooks/useActive
 import { metaData, cache } from '@cornerstonejs/core';
 import { useSystem } from '@ohif/core/src';
 import { SegmentationRepresentations } from '@cornerstonejs/tools/enums';
+import { Toolbar, Toolbar, Toolbox } from '@ohif/extension-default';
 
 type PanelSegmentationProps = {
   children?: React.ReactNode;
@@ -22,8 +23,17 @@ export default function PanelSegmentation({
   selectedSegmentationIdByViewportAndType,
 }: PanelSegmentationProps) {
   const { commandsManager, servicesManager } = useSystem();
-  const { customizationService, displaySetService, viewportGridService } = servicesManager.services;
+  const { customizationService, displaySetService, viewportGridService, toolbarService } =
+    servicesManager.services;
   const { activeViewportId } = viewportGridService.getState();
+
+  const utilitiesSectionMap = {
+    Segmentation: toolbarService.sections.segmentationToolbox,
+    [SegmentationRepresentations.Labelmap]:
+      toolbarService.sections.labelMapSegmentationUtilitiesToolbox,
+    [SegmentationRepresentations.Contour]:
+      toolbarService.sections.contourSegmentationUtilitiesToolbox,
+  };
 
   const { segmentationsWithRepresentations, disabled } =
     useActiveViewportSegmentationRepresentations();
@@ -223,6 +233,9 @@ export default function PanelSegmentation({
     if (tableProps.mode === 'collapsed') {
       return (
         <SegmentationTable.Collapsed>
+          <Toolbar
+            buttonSection={utilitiesSectionMap[segmentationRepresentationType ?? 'Segmentation']}
+          />
           <SegmentationTable.Collapsed.Header>
             <SegmentationTable.Collapsed.DropdownMenu>
               <CustomDropdownMenuContent />
@@ -241,6 +254,9 @@ export default function PanelSegmentation({
     return (
       <>
         <SegmentationTable.Expanded>
+          <Toolbar
+            buttonSection={utilitiesSectionMap[segmentationRepresentationType ?? 'Segmentation']}
+          />
           <SegmentationTable.Expanded.Header>
             <SegmentationTable.Expanded.DropdownMenu>
               <CustomDropdownMenuContent />

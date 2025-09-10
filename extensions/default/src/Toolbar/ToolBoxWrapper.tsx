@@ -8,7 +8,7 @@ import { useToolbar } from '@ohif/core/src/hooks/useToolbar';
  * @param props - Component props
  * @returns Component
  */
-export function ToolBoxButtonGroupWrapper({ buttonSection, id }) {
+export function ToolBoxButtonGroupWrapper({ buttonSection, id, className }) {
   const { onInteraction, toolbarButtons } = useToolbar({
     buttonSection,
   });
@@ -20,7 +20,9 @@ export function ToolBoxButtonGroupWrapper({ buttonSection, id }) {
   const items = toolbarButtons.map(button => button.componentProps);
 
   return (
-    <div className="bg-popover flex flex-row space-x-1 rounded-md px-0 py-0">
+    <div
+      className={classNames('bg-popover flex flex-row space-x-1 rounded-md px-0 py-0', className)}
+    >
       {items.map(item => (
         <ToolButton
           {...item}

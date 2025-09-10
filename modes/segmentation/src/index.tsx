@@ -134,31 +134,38 @@ function modeFactory({ modeConfiguration }) {
 
       const labelMapTools = ['BrushTools', 'MarkerLabelmap', 'RegionSegmentPlus', 'Shapes'];
 
-      const allSegmentationUtilities = [
-        ...contourUtilities,
-        ...labelMapUtilities,
-        ...commonSegmentationUtilities,
-      ];
-
-      const allSegmentationTools = [...contourTools, ...labelMapTools];
-
       // We cannot simply create two sections - utilities and tools - that combine the utilities and tools for both
       // segmentation types and add them to each tab because switching to a tab does not activate its selected segmentation
       // and thus the utilities/tools of the other tab might be incorrectly displayed.
       toolbarService.updateSection(toolbarService.sections.segmentationToolbox, [
-        'SegmentationUtilities',
         'SegmentationTools',
       ]);
       toolbarService.updateSection(toolbarService.sections.labelMapSegmentationToolbox, [
-        'LabelMapUtilities',
         'LabelMapTools',
       ]);
       toolbarService.updateSection(toolbarService.sections.contourSegmentationToolbox, [
-        'ContourUtilities',
         'ContourTools',
       ]);
 
-      toolbarService.updateSection('SegmentationUtilities', allSegmentationUtilities);
+      toolbarService.updateSection(toolbarService.sections.segmentationUtilitiesToolbox, [
+        'SegmentationUtilities',
+      ]);
+      toolbarService.updateSection(toolbarService.sections.labelMapSegmentationUtilitiesToolbox, [
+        'LabelMapUtilities',
+      ]);
+      toolbarService.updateSection(toolbarService.sections.contourSegmentationUtilitiesToolbox, [
+        'ContourUtilities',
+      ]);
+
+      toolbarService.updateSection('SegmentationTools', [...contourTools, ...labelMapTools]);
+      toolbarService.updateSection('LabelMapTools', labelMapTools);
+      toolbarService.updateSection('ContourTools', contourTools);
+
+      toolbarService.updateSection('SegmentationUtilities', [
+        ...contourUtilities,
+        ...labelMapUtilities,
+        ...commonSegmentationUtilities,
+      ]);
       toolbarService.updateSection('LabelMapUtilities', [
         ...labelMapUtilities,
         ...commonSegmentationUtilities,
@@ -167,10 +174,6 @@ function modeFactory({ modeConfiguration }) {
         ...contourUtilities,
         ...commonSegmentationUtilities,
       ]);
-
-      toolbarService.updateSection('SegmentationTools', allSegmentationTools);
-      toolbarService.updateSection('LabelMapTools', labelMapTools);
-      toolbarService.updateSection('ContourTools', contourTools);
 
       toolbarService.updateSection('BrushTools', ['Brush', 'Eraser', 'Threshold']);
     },

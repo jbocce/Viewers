@@ -183,6 +183,7 @@ const toolbarButtons: Button[] = [
     uiType: 'ohif.toolBoxButtonGroup',
     props: {
       buttonSection: true,
+      className: 'bg-transparent',
     },
   },
   {
@@ -190,6 +191,7 @@ const toolbarButtons: Button[] = [
     uiType: 'ohif.toolBoxButtonGroup',
     props: {
       buttonSection: true,
+      className: 'bg-transparent',
     },
   },
   {

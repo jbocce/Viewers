@@ -11,7 +11,7 @@ const getPanelModule = ({ commandsManager, servicesManager, extensionManager }: 
   const selectedSegmentationIdByViewportAndType: Map<string, Map<string, string>> = new Map();
   const { toolbarService } = servicesManager.services;
 
-  const toolbarMap = {
+  const toolSectionMap = {
     Segmentation: toolbarService.sections.segmentationToolbox,
     [SegmentationRepresentations.Labelmap]: toolbarService.sections.labelMapSegmentationToolbox,
     [SegmentationRepresentations.Contour]: toolbarService.sections.contourSegmentationToolbox,
@@ -55,7 +55,7 @@ const getPanelModule = ({ commandsManager, servicesManager, extensionManager }: 
     return (
       <>
         <Toolbox
-          buttonSectionId={toolbarMap[props.segmentationRepresentationType ?? 'Segmentation']}
+          buttonSectionId={toolSectionMap[props.segmentationRepresentationType ?? 'Segmentation']}
           title={tValue}
         />
         <PanelSegmentation
