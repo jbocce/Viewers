@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2550" height="3300" viewBox="0 0 2550 3300" version="1.1">
+  <title>Colouring Page - Trial Scene (inspired by reference relief)</title>
+  <desc>Black-outline colouring page, letter size. Print at 100% for best results.</desc>
+
+  <defs>
+    <style type="text/css"><![CDATA[
+      .line { stroke: #000000; stroke-width: 8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .line-thick { stroke: #000000; stroke-width: 12; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .line-thin { stroke: #000000; stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    ]]></style>
+    <clipPath id="pageArea">
+      <rect x="100" y="100" width="2350" height="3100" rx="40" ry="40"/>
+    </clipPath>
+  </defs>
+
+  <!-- Page border -->
+  <rect class="line-thick" x="100" y="100" width="2350" height="3100" rx="40" ry="40"/>
+
+  <g clip-path="url(#pageArea)">
+    <!-- Colonnade header -->
+    <path class="line" d="M220 420 H2330"/>
+    <path class="line" d="M220 560 H2330"/>
+    <!-- Left and right entablature blocks -->
+    <rect class="line" x="190" y="420" width="120" height="140"/>
+    <rect class="line" x="2240" y="420" width="120" height="140"/>
+
+    <!-- Columns (stylized) -->
+    <g>
+      <path class="line" d="M270 560 v1650"/>
+      <ellipse class="line" cx="270" cy="560" rx="60" ry="28"/>
+      <ellipse class="line" cx="270" cy="2200" rx="70" ry="34"/>
+
+      <path class="line" d="M650 560 v900"/>
+      <ellipse class="line" cx="650" cy="560" rx="50" ry="22"/>
+
+      <path class="line" d="M1030 560 v900"/>
+      <ellipse class="line" cx="1030" cy="560" rx="50" ry="22"/>
+
+      <path class="line" d="M1410 560 v900"/>
+      <ellipse class="line" cx="1410" cy="560" rx="50" ry="22"/>
+
+      <path class="line" d="M1790 560 v900"/>
+      <ellipse class="line" cx="1790" cy="560" rx="50" ry="22"/>
+
+      <path class="line" d="M2170 560 v1200"/>
+      <ellipse class="line" cx="2170" cy="560" rx="60" ry="28"/>
+    </g>
+
+    <!-- Arches connecting columns -->
+    <g>
+      <path class="line" d="M270 560 C460 340, 440 340, 650 560"/>
+      <path class="line" d="M650 560 C840 340, 820 340, 1030 560"/>
+      <path class="line" d="M1030 560 C1220 340, 1200 340, 1410 560"/>
+      <path class="line" d="M1410 560 C1600 340, 1580 340, 1790 560"/>
+      <path class="line" d="M1790 560 C1980 340, 1960 340, 2170 560"/>
+    </g>
+
+    <!-- Dais and crowd terrace (left background) -->
+    <path class="line" d="M420 1350 L1710 1350 L1710 1500 Q1200 1540 720 1620 T420 1700 Z"/>
+    <path class="line-thin" d="M450 1385 L1680 1385"/>
+    <path class="line-thin" d="M460 1420 L1650 1420"/>
+
+    <!-- Steps (center, diagonal) -->
+    <g>
+      <path class="line" d="M950 1500 L2120 2300 L2120 2390 L930 1585 Z"/>
+      <path class="line" d="M900 1580 L2090 2380"/>
+      <path class="line" d="M860 1660 L2050 2460"/>
+      <path class="line" d="M820 1740 L2010 2540"/>
+      <path class="line" d="M780 1820 L1970 2620"/>
+      <path class="line" d="M740 1900 L1930 2700"/>
+      <path class="line" d="M700 1980 L1890 2780"/>
+      <path class="line" d="M660 2060 L1850 2860"/>
+    </g>
+
+    <!-- Background city/crowd suggestion -->
+    <g class="crowd">
+      <path class="line-thin" d="M450 1700 q80 -50 160 0 t160 0 t160 0 t160 0 t160 0"/>
+      <path class="line-thin" d="M470 1760 q80 -40 160 0 t160 0 t160 0 t160 0 t160 0"/>
+      <path class="line-thin" d="M500 1820 q80 -40 160 0 t160 0 t160 0 t160 0 t160 0"/>
+      <circle class="line-thin" cx="560" cy="1710" r="14"/>
+      <circle class="line-thin" cx="610" cy="1730" r="14"/>
+      <circle class="line-thin" cx="670" cy="1715" r="14"/>
+      <circle class="line-thin" cx="730" cy="1735" r="14"/>
+      <circle class="line-thin" cx="790" cy="1718" r="14"/>
+      <circle class="line-thin" cx="850" cy="1736" r="14"/>
+      <circle class="line-thin" cx="910" cy="1720" r="14"/>
+      <circle class="line-thin" cx="970" cy="1738" r="14"/>
+      <circle class="line-thin" cx="1030" cy="1722" r="14"/>
+      <circle class="line-thin" cx="1090" cy="1740" r="14"/>
+      <circle class="line-thin" cx="1150" cy="1724" r="14"/>
+      <circle class="line-thin" cx="1210" cy="1742" r="14"/>
+      <circle class="line-thin" cx="1270" cy="1726" r="14"/>
+      <circle class="line-thin" cx="1330" cy="1744" r="14"/>
+    </g>
+
+    <!-- Seated judge (simplified silhouette) -->
+    <g>
+      <path class="line" d="M560 1210 q-40 100 40 160 q80 60 200 60 q120 0 160 -60 q40 -60 -20 -140 q-60 -80 -200 -80 q-120 0 -180 60 z"/>
+      <path class="line" d="M680 1120 q40 -60 120 -60 q80 0 120 60"/>
+      <circle class="line" cx="800" cy="1060" r="46"/>
+      <path class="line" d="M760 1260 l-40 160 l220 0 l-40 -160"/>
+      <path class="line" d="M720 1420 l-40 120 l280 0 l-40 -120"/>
+    </g>
+
+    <!-- Guard at left foreground with spear -->
+    <g>
+      <path class="line" d="M300 2050 q40 -160 160 -160 q120 0 160 160 q40 160 -40 320 q-80 160 -200 160 q-120 0 -120 -160 q0 -160 40 -320 z"/>
+      <circle class="line" cx="460" cy="1890" r="48"/>
+      <path class="line" d="M460 1938 v160"/>
+      <path class="line" d="M392 2150 h136 v120 h-136 z"/>
+      <path class="line" d="M460 1700 v1200"/>
+      <path class="line" d="M420 1700 h80"/>
+    </g>
+
+    <!-- Two figures at right foreground -->
+    <g>
+      <!-- Leading figure (bound) -->
+      <path class="line" d="M1870 1980 q-40 -180 -220 -180 q-180 0 -220 180 q-40 180 120 320 q160 140 320 0 q160 -140 120 -320 z"/>
+      <circle class="line" cx="1650" cy="1760" r="60"/>
+      <path class="line" d="M1580 1820 q60 60 140 0"/>
+      <path class="line" d="M1530 2000 q120 40 240 0"/>
+      <path class="line" d="M1600 2100 l100 140"/>
+      <path class="line" d="M1700 2100 l-100 140"/>
+      <!-- Guard holding the figure -->
+      <path class="line" d="M2030 1880 q-20 -160 -160 -160 q-140 0 -160 160 q-20 160 100 260 q120 100 220 0 q120 -100 100 -260 z"/>
+      <circle class="line" cx="1870" cy="1700" r="52"/>
+      <path class="line" d="M1800 1750 q60 40 140 0"/>
+      <path class="line" d="M1960 2000 q-120 40 -240 0"/>
+      <path class="line" d="M1780 2140 l-40 220"/>
+      <path class="line" d="M1960 2140 l40 220"/>
+    </g>
+
+    <!-- Brick base at step edge -->
+    <g>
+      <path class="line" d="M620 2300 q0 220 200 360 q200 140 500 200 q300 60 700 40"/>
+      <path class="line-thin" d="M700 2330 q0 160 180 260"/>
+      <path class="line-thin" d="M860 2420 q0 120 160 200"/>
+      <path class="line-thin" d="M1040 2500 q0 100 140 160"/>
+    </g>
+
+    <!-- Ground line -->
+    <path class="line" d="M150 3050 H2380"/>
+  </g>
+
+  <!-- Small label (can be cut off when printing) -->
+  <text x="1275" y="90" font-family="sans-serif" font-size="28" text-anchor="middle">Colouring Page • Personal use only</text>
+</svg>
+
