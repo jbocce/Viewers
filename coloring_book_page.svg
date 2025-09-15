@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8.5in" height="11in" viewBox="0 0 612 792" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .outline { fill: none; stroke: black; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .thin-outline { fill: none; stroke: black; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      .detail-line { fill: none; stroke: black; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="306" y="40" text-anchor="middle" font-family="serif" font-size="24" font-weight="bold" fill="black">Classical Scene Coloring Page</text>
+  
+  <!-- Main architectural frame -->
+  <!-- Left column -->
+  <rect x="80" y="80" width="20" height="180" class="outline"/>
+  <ellipse cx="90" cy="75" rx="15" ry="8" class="outline"/>
+  <rect x="75" y="65" width="30" height="15" class="outline"/>
+  
+  <!-- Right column -->
+  <rect x="512" y="80" width="20" height="180" class="outline"/>
+  <ellipse cx="522" cy="75" rx="15" ry="8" class="outline"/>
+  <rect x="507" y="65" width="30" height="15" class="outline"/>
+  
+  <!-- Top arch connecting columns -->
+  <path d="M 110 80 Q 306 40 502 80" class="outline"/>
+  <path d="M 110 85 Q 306 45 502 85" class="thin-outline"/>
+  
+  <!-- Decorative capitals -->
+  <rect x="75" y="260" width="30" height="12" class="outline"/>
+  <rect x="507" y="260" width="30" height="12" class="outline"/>
+  
+  <!-- Inner arches -->
+  <path d="M 140 100 Q 180 80 220 100" class="outline"/>
+  <path d="M 250 100 Q 290 80 330 100" class="outline"/>
+  <path d="M 360 100 Q 400 80 440 100" class="outline"/>
+  
+  <!-- Inner columns -->
+  <rect x="175" y="100" width="8" height="120" class="thin-outline"/>
+  <rect x="285" y="100" width="8" height="120" class="thin-outline"/>
+  <rect x="395" y="100" width="8" height="120" class="thin-outline"/>
+  
+  <!-- Central stepped platform -->
+  <rect x="220" y="240" width="172" height="20" class="outline"/>
+  <rect x="230" y="220" width="152" height="20" class="outline"/>
+  <rect x="240" y="200" width="132" height="20" class="outline"/>
+  <rect x="250" y="180" width="112" height="20" class="outline"/>
+  <rect x="260" y="160" width="92" height="20" class="outline"/>
+  <rect x="270" y="140" width="72" height="20" class="outline"/>
+  
+  <!-- Step details -->
+  <g class="detail-line">
+    <line x1="220" y1="250" x2="392" y2="250"/>
+    <line x1="230" y1="230" x2="382" y2="230"/>
+    <line x1="240" y1="210" x2="372" y2="210"/>
+    <line x1="250" y1="190" x2="362" y2="190"/>
+    <line x1="260" y1="170" x2="352" y2="170"/>
+    <line x1="270" y1="150" x2="342" y2="150"/>
+  </g>
+  
+  <!-- Left Roman soldier figure -->
+  <g class="outline">
+    <!-- Head -->
+    <circle cx="130" cy="180" r="12"/>
+    <!-- Helmet crest -->
+    <path d="M 125 168 Q 130 160 135 168"/>
+    <!-- Body -->
+    <rect x="120" y="192" width="20" height="40" rx="3"/>
+    <!-- Arms -->
+    <rect x="110" y="200" width="8" height="25" rx="4"/>
+    <rect x="142" y="200" width="8" height="25" rx="4"/>
+    <!-- Legs -->
+    <rect x="122" y="232" width="7" height="30" rx="3"/>
+    <rect x="131" y="232" width="7" height="30" rx="3"/>
+    <!-- Shield -->
+    <ellipse cx="105" cy="210" rx="8" ry="15"/>
+    <!-- Spear -->
+    <line x1="155" y1="190" x2="155" y2="150"/>
+  </g>
+  
+  <!-- Central seated figure (judge/emperor) -->
+  <g class="outline">
+    <!-- Head -->
+    <circle cx="306" cy="130" r="14"/>
+    <!-- Crown/laurel -->
+    <path d="M 292 125 Q 306 115 320 125"/>
+    <!-- Body/toga -->
+    <path d="M 290 144 Q 306 140 322 144 L 325 180 Q 306 185 287 180 Z"/>
+    <!-- Arms -->
+    <path d="M 290 155 Q 280 160 275 170"/>
+    <path d="M 322 155 Q 332 160 337 170"/>
+    <!-- Chair/throne -->
+    <rect x="275" y="175" width="62" height="25" rx="3"/>
+    <rect x="273" y="170" width="8" height="35"/>
+    <rect x="331" y="170" width="8" height="35"/>
+  </g>
+  
+  <!-- Right group of figures -->
+  <g class="outline">
+    <!-- Figure 1 -->
+    <circle cx="450" cy="185" r="11"/>
+    <path d="M 440 196 Q 450 190 460 196 L 462 230 Q 450 235 438 230 Z"/>
+    <rect x="442" y="230" width="6" height="25" rx="3"/>
+    <rect x="450" y="230" width="6" height="25" rx="3"/>
+    
+    <!-- Figure 2 -->
+    <circle cx="470" cy="190" r="10"/>
+    <path d="M 462 200 Q 470 195 478 200 L 480 225 Q 470 230 460 225 Z"/>
+    <rect x="464" y="225" width="5" height="20" rx="2"/>
+    <rect x="471" y="225" width="5" height="20" rx="2"/>
+    
+    <!-- Figure 3 (partially visible) -->
+    <circle cx="485" cy="195" r="9"/>
+    <path d="M 478 204 Q 485 200 492 204 L 494 220 Q 485 225 476 220 Z"/>
+  </g>
+  
+  <!-- Left group of standing figures -->
+  <g class="outline">
+    <!-- Figure 1 -->
+    <circle cx="160" cy="200" r="10"/>
+    <path d="M 152 210 Q 160 205 168 210 L 170 240 Q 160 245 150 240 Z"/>
+    <rect x="154" y="240" width="5" height="22" rx="2"/>
+    <rect x="161" y="240" width="5" height="22" rx="2"/>
+    
+    <!-- Figure 2 -->
+    <circle cx="180" cy="205" r="9"/>
+    <path d="M 173 214 Q 180 210 187 214 L 189 235 Q 180 240 171 235 Z"/>
+    <rect x="175" y="235" width="4" height="20" rx="2"/>
+    <rect x="181" y="235" width="4" height="20" rx="2"/>
+    
+    <!-- Figure 3 -->
+    <circle cx="195" cy="210" r="8"/>
+    <path d="M 189 218 Q 195 215 201 218 L 203 235 Q 195 240 187 235 Z"/>
+  </g>
+  
+  <!-- Background cityscape through arches -->
+  <g class="thin-outline">
+    <!-- Buildings -->
+    <rect x="145" y="90" width="15" height="25"/>
+    <rect x="160" y="85" width="12" height="30"/>
+    <rect x="172" y="95" width="10" height="20"/>
+    
+    <rect x="255" y="88" width="18" height="27"/>
+    <rect x="273" y="92" width="14" height="23"/>
+    <rect x="287" y="90" width="16" height="25"/>
+    
+    <rect x="365" y="85" width="20" height="30"/>
+    <rect x="385" y="90" width="15" height="25"/>
+    <rect x="400" y="88" width="12" height="27"/>
+    
+    <!-- Hills/mountains -->
+    <path d="M 140 85 L 150 75 L 160 80 L 170 70 L 180 85"/>
+    <path d="M 250 82 L 260 72 L 270 78 L 280 68 L 290 75 L 300 82"/>
+    <path d="M 360 80 L 370 70 L 380 75 L 390 65 L 400 72 L 410 80"/>
+  </g>
+  
+  <!-- Decorative elements -->
+  <g class="detail-line">
+    <!-- Toga folds and drapery details -->
+    <path d="M 292 150 Q 300 155 308 150"/>
+    <path d="M 295 165 Q 306 170 317 165"/>
+    <path d="M 298 175 Q 306 180 314 175"/>
+    
+    <!-- Armor details on soldier -->
+    <line x1="122" y1="200" x2="138" y2="200"/>
+    <line x1="122" y1="210" x2="138" y2="210"/>
+    <line x1="122" y1="220" x2="138" y2="220"/>
+    
+    <!-- Shield decoration -->
+    <circle cx="105" cy="210" r="4"/>
+    
+    <!-- Facial features guides (very light) -->
+    <g stroke-width="0.5" opacity="0.3">
+      <line x1="125" y1="180" x2="135" y2="180"/>
+      <circle cx="127" cy="177" r="1"/>
+      <circle cx="133" cy="177" r="1"/>
+      <path d="M 128 183 Q 130 185 132 183"/>
+      
+      <line x1="300" y1="130" x2="312" y2="130"/>
+      <circle cx="302" cy="127" r="1"/>
+      <circle cx="310" cy="127" r="1"/>
+      <path d="M 303 133 Q 306 135 309 133"/>
+    </g>
+  </g>
+  
+  <!-- Border frame -->
+  <rect x="50" y="50" width="512" height="700" fill="none" stroke="black" stroke-width="3"/>
+  
+  <!-- Instructions at bottom -->
+  <text x="306" y="770" text-anchor="middle" font-family="sans-serif" font-size="12" fill="black">Color this classical scene! Use different colors for togas, architecture, and background elements.</text>
+</svg>
