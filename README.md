@@ -1,3 +1,28 @@
+## Colouring Page Generator
+
+Convert any image into clean black-and-white line art suitable for printing as a colouring book page.
+
+### Install
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Usage
+
+```bash
+python tools/coloring_page.py --input path/to/photo.jpg --output out/colouring_page.png --width 2400
+```
+
+Flags:
+- `--width` longest side resize (default 2048). Set to `0` to keep original size.
+- `--no-skeleton` disable skeletonization if you prefer slightly thicker edges.
+- `--edge-thicken` dilation size for edges (default 1).
+- `--tone-levels` posterization levels for soft tone guides (default 3).
+
+The result is a white background PNG with crisp black lines.
+
 <!-- prettier-ignore-start -->
 <div align="center">
   <h1>OHIF Medical Imaging Viewer</h1>
