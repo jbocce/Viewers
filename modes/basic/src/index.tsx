@@ -215,6 +215,7 @@ export function onModeExit({ servicesManager }: withAppTypes) {
 
 export const toolbarSections = {
   [TOOLBAR_SECTIONS.primary]: [
+    'ToggleGrid',
     'MeasurementTools',
     'Zoom',
     'Pan',
