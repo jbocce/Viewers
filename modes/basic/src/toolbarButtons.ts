@@ -23,6 +23,15 @@ export const setToolActiveToolbar = {
 const toolbarButtons: Button[] = [
   // sections
   {
+    id: 'ToggleGrid',
+    uiType: 'ohif.toolButton',
+    props: {
+      label: 'Toggle Grid',
+      icon: 'tool-capture',
+      commands: [{ commandName: 'toggleGrid' }],
+    },
+  },
+  {
     id: 'MeasurementTools',
     uiType: 'ohif.toolButtonList',
     props: {
