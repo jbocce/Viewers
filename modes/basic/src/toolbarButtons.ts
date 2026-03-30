@@ -26,9 +26,9 @@ const toolbarButtons: Button[] = [
     id: 'ToggleGrid',
     uiType: 'ohif.toolButton',
     props: {
-      label: 'Toggle Grid',
+      label: 'Show/Hide Grid',
       icon: 'tool-capture',
-      commands: [{ commandName: 'toggleGrid' }],
+      commands: [{ commandName: 'showHideGrid' }],
     },
   },
   {
