@@ -9,7 +9,7 @@ import { useStudyListStateSync } from '../../hooks';
 import { StudyList, Icons, Button, useModal, InvestigationalUseDialog } from '@ohif/ui-next';
 import { useWorkListToolbarActions } from './useWorkListToolbarActions';
 
-import { utils, DicomMetadataStore, useSystem } from '@ohif/core';
+import { utils, useSystem } from '@ohif/core';
 import type { StudyRow } from '@ohif/ui-next';
 
 type Props = withAppTypes & {
@@ -131,7 +131,6 @@ export default function WorkListUINext({
             <StudyList.Preview>
               <SidePanelPreview
                 dataSource={dataSource}
-                extensionManager={extensionManager as any}
                 selected={selected}
               />
             </StudyList.Preview>
@@ -211,11 +210,9 @@ function StudyListSettingsPopover() {
 
 function SidePanelPreview({
   dataSource,
-  extensionManager,
   selected,
 }: {
   dataSource: any;
-  extensionManager: any;
   selected: StudyRow | null;
 }) {
   const [series, setSeries] = useState<any[]>([]);
@@ -223,6 +220,8 @@ function SidePanelPreview({
   const { sortBySeriesDate } = utils as any;
 
   useEffect(() => {
+    let cancelled = false;
+
     const run = async () => {
       const sid = (selected as any)?.studyInstanceUid;
       if (!sid) {
@@ -230,123 +229,62 @@ function SidePanelPreview({
         setThumbs({});
         return;
       }
+
       try {
         const s = await dataSource.query.series.search(sid);
+        if (cancelled) {
+          return;
+        }
+
         const sorted = typeof sortBySeriesDate === 'function' ? sortBySeriesDate(s) : s;
-        setSeries(sorted ?? []);
-      } catch (e) {
-        console.warn(e);
-        setSeries([]);
+        const seriesList = sorted ?? [];
+        setSeries(seriesList);
+
         setThumbs({});
-      }
-    };
-    run();
-  }, [dataSource, selected]);
-
-  useEffect(() => {
-    const sid = (selected as any)?.studyInstanceUid;
-    if (!sid || !series?.length) {
-      setThumbs({});
-      return;
-    }
-
-    let cancelled = false;
-
-    const load = async () => {
-      try {
-        await dataSource.retrieve.series.metadata({ StudyInstanceUID: sid });
-
-        const nextThumbs: Record<string, string | null> = {};
-        for (const s of series) {
-          const seriesUID = s.seriesInstanceUid || s.SeriesInstanceUID;
+        for (const row of seriesList) {
+          const seriesUID = row.seriesInstanceUid || row.SeriesInstanceUID;
           if (!seriesUID) {
             continue;
           }
-          // Skip rendering thumbnails for non-image modalities (e.g., RTDOSE/RTPLAN/RTSTRUCT)
-          const modality = String(s.modality || s.Modality || '').toUpperCase();
+          const modality = String(row.modality || row.Modality || '').toUpperCase();
           if (NON_IMAGE_MODALITIES.has(modality)) {
-            nextThumbs[seriesUID] = null;
-            continue;
-          }
-          const seriesMeta = DicomMetadataStore.getSeries?.(sid, seriesUID);
-          const instance =
-            seriesMeta?.instances?.[Math.floor((seriesMeta?.instances?.length || 1) / 2)];
-          if (!instance) {
-            nextThumbs[seriesUID] = null;
-            continue;
-          }
-
-          let imageId: string | undefined;
-          if (instance?.imageId) {
-            imageId = instance.imageId;
-          } else if (instance) {
-            try {
-              const ids = dataSource.getImageIdsForInstance({ instance });
-              imageId = Array.isArray(ids) ? ids[Math.floor(ids.length / 2)] : ids;
-            } catch {}
-          }
-
-          let src: string | null = null;
-          try {
-            if (instance && imageId) {
-              const cfg = dataSource.getConfig?.();
-              const rendering = cfg?.thumbnailRendering;
-
-              let opts: any = undefined;
-              if (rendering === 'wadors') {
-                try {
-                  const utilitiesModule = extensionManager?.getModuleEntry?.(
-                    '@ohif/extension-cornerstone.utilityModule.common'
-                  );
-                  const { cornerstone } =
-                    utilitiesModule?.exports?.getCornerstoneLibraries?.() || {};
-                  if (cornerstone?.utilities?.loadImageToCanvas) {
-                    const getImageSrc = (imageId: string) =>
-                      new Promise<string>((resolve, reject) => {
-                        try {
-                          const canvas = document.createElement('canvas');
-                          cornerstone.utilities
-                            .loadImageToCanvas({ canvas, imageId, thumbnail: true })
-                            .then(() => resolve(canvas.toDataURL()))
-                            .catch(reject);
-                        } catch (e) {
-                          reject(e);
-                        }
-                      });
-                    opts = { getImageSrc };
-                  }
-                } catch {}
-              }
-
-              const getThumb = dataSource.retrieve.getGetThumbnailSrc(instance, imageId);
-              if (typeof getThumb === 'function') {
-                try {
-                  src = await getThumb(opts);
-                } catch {
-                  src = null;
-                }
-              }
+            if (!cancelled) {
+              setThumbs(prev => ({ ...prev, [seriesUID]: null }));
             }
-          } catch {}
+            continue;
+          }
 
-          nextThumbs[seriesUID] = src ?? null;
-        }
-
-        if (!cancelled) {
-          setThumbs(nextThumbs);
+          void (async () => {
+            let src: string | null = null;
+            try {
+              const getThumbnailSrc = dataSource?.retrieve?.getGetThumbnailSrc?.(
+                { StudyInstanceUID: sid, SeriesInstanceUID: seriesUID },
+                undefined
+              );
+              src = (await getThumbnailSrc?.()) ?? null;
+            } catch {
+              src = null;
+            }
+            if (!cancelled) {
+              setThumbs(prev => ({ ...prev, [seriesUID]: src }));
+            }
+          })();
         }
       } catch (e) {
         if (!cancelled) {
+          console.warn(e);
+          setSeries([]);
           setThumbs({});
         }
       }
     };
 
-    load();
+    void run();
+
     return () => {
       cancelled = true;
     };
-  }, [dataSource, extensionManager, series, selected]);
+  }, [dataSource, selected]);
 
   return (
     <StudyList.PreviewContainer>
