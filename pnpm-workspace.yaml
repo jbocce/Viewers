@@ -38,6 +38,8 @@ auditConfig:
     # braces is reached only via build/test tooling (webpack, tailwind, jest,
     # docusaurus), which expands repo-defined globs, never user input
     - GHSA-vfj7-8cjw-p6xm
+    # TEST ONLY (dependency audit test PR, do not merge): one of the 7 axios 1.18.1 advisories
+    - GHSA-r4gj-5m52-g5wh
 allowBuilds:
   '@scarf/scarf': true
   '@swc/core': true
