@@ -15,6 +15,8 @@ export const preserveKeys = [
   'theme',
   'debug',
   'useNextViewports',
+  // The viewer shell's UI choice (OHIF-2799): auto, desktop or tablet.
+  'ui',
 ];
 
 function preserveKey(query: URLSearchParams, current: URLSearchParams, key: string) {

@@ -18,6 +18,7 @@ import {
   errorHandler,
   CustomizationService,
   PanelService,
+  ViewerShellService,
   WorkflowStepsService,
   StudyPrefetcherService,
   MultiMonitorService,
@@ -76,6 +77,7 @@ async function appInit(appConfigOrFunc, defaultExtensions, defaultModes) {
     CineService.REGISTRATION,
     UserAuthenticationService.REGISTRATION,
     PanelService.REGISTRATION,
+    ViewerShellService.REGISTRATION,
     WorkflowStepsService.REGISTRATION,
     [StudyPrefetcherService.REGISTRATION, appConfig.studyPrefetcher],
   ]);

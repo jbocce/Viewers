@@ -31,6 +31,7 @@ import getMetadataContextCustomization from './customizations/metadataContextCus
 import headerRightSideCustomization from './customizations/headerRightSideCustomization';
 import hideHeaderUndoRedoCustomization from './customizations/hideHeaderUndoRedoCustomization';
 import hangingProtocolsCustomization from './customizations/hangingProtocolsCustomization';
+import viewerShellCustomization from './customizations/viewerShellCustomization';
 /**
  *
  * Note: this is an example of how the customization module can be used
@@ -103,6 +104,7 @@ export default function getCustomizationModule({ servicesManager, extensionManag
         ...getMetadataContextCustomization(),
         ...headerRightSideCustomization,
         ...hangingProtocolsCustomization,
+        ...viewerShellCustomization,
       },
     },
   ];

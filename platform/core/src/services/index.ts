@@ -15,6 +15,7 @@ import pubSubServiceInterface, { PubSubService } from './_shared/pubSubServiceIn
 import UserAuthenticationService from './UserAuthenticationService';
 import CustomizationService from './CustomizationService';
 import PanelService from './PanelService';
+import ViewerShellService from './ViewerShellService';
 import WorkflowStepsService from './WorkflowStepsService';
 import StudyPrefetcherService from './StudyPrefetcherService';
 import { MultiMonitorService } from './MultiMonitorService';
@@ -44,6 +45,7 @@ export {
   PubSubService,
   UserAuthenticationService,
   PanelService,
+  ViewerShellService,
   WorkflowStepsService,
   StudyPrefetcherService,
 };

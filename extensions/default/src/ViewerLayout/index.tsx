@@ -1,14 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { InvestigationalUseDialog } from '@ohif/ui-next';
-import { HangingProtocolService, CommandsManager } from '@ohif/core';
+import { InvestigationalUseDialog, Onboarding } from '@ohif/ui-next';
+import { HangingProtocolService } from '@ohif/core';
 import { useAppConfig } from '@state';
-import ViewerHeader from './ViewerHeader';
-import SidePanelWithServices from '../Components/SidePanelWithServices';
-import { Onboarding, ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@ohif/ui-next';
-import useResizablePanels from './ResizablePanelsHook';
-
-const resizableHandleClassName = 'mt-[1px] bg-background';
+import LegacyChrome from './LegacyChrome';
+import { useViewportGridHost, ViewportGridPortal, ViewportGridSlot } from './ViewportGridHost';
+import useViewerShellClass from '../hooks/useViewerShellClass';
 
 function ViewerLayout({
   // From Extension Module Params
@@ -30,39 +27,12 @@ function ViewerLayout({
 }: withAppTypes): React.FunctionComponent {
   const [appConfig] = useAppConfig();
 
-  const { panelService, hangingProtocolService, customizationService } = servicesManager.services;
+  const { hangingProtocolService, customizationService, viewerShellService } =
+    servicesManager.services;
   const [showLoadingIndicator, setShowLoadingIndicator] = useState(appConfig.showLoadingIndicator);
 
-  const hasPanels = useCallback(
-    (side): boolean => !!panelService.getPanels(side).length,
-    [panelService]
-  );
-
-  const [hasRightPanels, setHasRightPanels] = useState(hasPanels('right'));
-  const [hasLeftPanels, setHasLeftPanels] = useState(hasPanels('left'));
-  const [leftPanelClosedState, setLeftPanelClosed] = useState(leftPanelClosed);
-  const [rightPanelClosedState, setRightPanelClosed] = useState(rightPanelClosed);
-
-  const [
-    leftPanelProps,
-    rightPanelProps,
-    resizablePanelGroupProps,
-    resizableLeftPanelProps,
-    resizableViewportGridPanelProps,
-    resizableRightPanelProps,
-    onHandleDragging,
-  ] = useResizablePanels(
-    leftPanelClosed,
-    setLeftPanelClosed,
-    rightPanelClosed,
-    setRightPanelClosed,
-    hasLeftPanels,
-    hasRightPanels,
-    leftPanelInitialExpandedWidth,
-    rightPanelInitialExpandedWidth,
-    leftPanelMinimumExpandedWidth,
-    rightPanelMinimumExpandedWidth
-  );
+  const viewportGridHostElement = useViewportGridHost();
+  const shellClass = useViewerShellClass(viewerShellService);
 
   const handleMouseEnter = () => {
     (document.activeElement as HTMLElement)?.blur();
@@ -126,102 +96,69 @@ function ViewerLayout({
     };
   };
 
-  useEffect(() => {
-    const { unsubscribe } = panelService.subscribe(
-      panelService.EVENTS.PANELS_CHANGED,
-      ({ options }) => {
-        setHasLeftPanels(hasPanels('left'));
-        setHasRightPanels(hasPanels('right'));
-        if (options?.leftPanelClosed !== undefined) {
-          setLeftPanelClosed(options.leftPanelClosed);
-        }
-        if (options?.rightPanelClosed !== undefined) {
-          setRightPanelClosed(options.rightPanelClosed);
-        }
-      }
-    );
-
-    return () => {
-      unsubscribe();
-    };
-  }, [panelService, hasPanels]);
-
   const viewportComponents = viewports.map(getViewportComponentData);
+
+  const loadingIndicator = showLoadingIndicator ? (
+    <LoadingIndicatorProgress className="bg-background h-full w-full" />
+  ) : null;
 
   return (
     <div>
-      <ViewerHeader
-        hotkeysManager={hotkeysManager}
-        extensionManager={extensionManager}
-        servicesManager={servicesManager}
-        appConfig={appConfig}
-      />
-      <div
-        className="relative flex w-full flex-row flex-nowrap items-stretch overflow-hidden bg-background"
-        style={{ height: 'calc(100vh - 52px)' }}
-      >
-        <React.Fragment>
-          {showLoadingIndicator && <LoadingIndicatorProgress className="h-full w-full bg-background" />}
-          <ResizablePanelGroup {...resizablePanelGroupProps}>
-            {/* LEFT SIDEPANELS */}
-            {hasLeftPanels ? (
-              <>
-                <ResizablePanel {...resizableLeftPanelProps}>
-                  <SidePanelWithServices
-                    side="left"
-                    isExpanded={!leftPanelClosedState}
-                    servicesManager={servicesManager}
-                    {...leftPanelProps}
-                  />
-                </ResizablePanel>
-                <ResizableHandle
-                  onDragging={onHandleDragging}
-                  disabled={!leftPanelResizable}
-                  className={resizableHandleClassName}
-                />
-              </>
-            ) : null}
-            {/* TOOLBAR + GRID */}
-            <ResizablePanel {...resizableViewportGridPanelProps}>
-              <div className="flex h-full flex-1 flex-col">
-                <div
-                  className="relative flex h-full flex-1 items-center justify-center overflow-hidden bg-background"
-                  onMouseEnter={handleMouseEnter}
-                >
-                  <ViewportGridComp
-                    servicesManager={servicesManager}
-                    viewportComponents={viewportComponents}
-                    commandsManager={commandsManager}
-                  />
-                </div>
-              </div>
-            </ResizablePanel>
-            {hasRightPanels ? (
-              <>
-                <ResizableHandle
-                  onDragging={onHandleDragging}
-                  disabled={!rightPanelResizable}
-                  className={resizableHandleClassName}
-                />
-                <ResizablePanel {...resizableRightPanelProps}>
-                  <SidePanelWithServices
-                    side="right"
-                    isExpanded={!rightPanelClosedState}
-                    servicesManager={servicesManager}
-                    {...rightPanelProps}
-                  />
-                </ResizablePanel>
-              </>
-            ) : null}
-          </ResizablePanelGroup>
-        </React.Fragment>
-      </div>
+      {shellClass !== 'desktop' ? (
+        // PROTOTYPE (OHIF-2799): bare placeholder shell for both tablet shell
+        // classes, just the viewport grid.
+        <div
+          className="bg-background relative flex w-full overflow-hidden"
+          style={{ height: '100dvh' }}
+          data-cy="viewer-shell"
+          data-shell-class={shellClass}
+        >
+          {loadingIndicator}
+          <ViewportGridSlot
+            hostElement={viewportGridHostElement}
+            className="flex h-full flex-1 flex-col"
+          />
+        </div>
+      ) : (
+        <LegacyChrome
+          extensionManager={extensionManager}
+          servicesManager={servicesManager}
+          hotkeysManager={hotkeysManager}
+          appConfig={appConfig}
+          loadingIndicator={loadingIndicator}
+          leftPanelClosed={leftPanelClosed}
+          rightPanelClosed={rightPanelClosed}
+          leftPanelResizable={leftPanelResizable}
+          rightPanelResizable={rightPanelResizable}
+          leftPanelInitialExpandedWidth={leftPanelInitialExpandedWidth}
+          rightPanelInitialExpandedWidth={rightPanelInitialExpandedWidth}
+          leftPanelMinimumExpandedWidth={leftPanelMinimumExpandedWidth}
+          rightPanelMinimumExpandedWidth={rightPanelMinimumExpandedWidth}
+          gridSlot={
+            <ViewportGridSlot
+              hostElement={viewportGridHostElement}
+              className="flex h-full flex-1 flex-col"
+            />
+          }
+        />
+      )}
+      {/* The grid is rendered once, here, and shown wherever the current chrome puts its slot. */}
+      <ViewportGridPortal hostElement={viewportGridHostElement}>
+        <div
+          className="bg-background relative flex h-full flex-1 items-center justify-center overflow-hidden"
+          onMouseEnter={handleMouseEnter}
+        >
+          <ViewportGridComp
+            servicesManager={servicesManager}
+            viewportComponents={viewportComponents}
+            commandsManager={commandsManager}
+          />
+        </div>
+      </ViewportGridPortal>
       <Onboarding tours={customizationService.getCustomization('ohif.tours')} />
       <InvestigationalUseDialog dialogConfiguration={appConfig?.investigationalUseDialog} />
     </div>
   );
 }
-
-
 
 export default ViewerLayout;

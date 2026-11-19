@@ -11,6 +11,7 @@ import {
   CineService,
   UserAuthenticationService,
   PanelService,
+  ViewerShellService,
   UIDialogService,
   UIViewportDialogService,
   MultiMonitorService,
@@ -35,6 +36,7 @@ interface Services {
   uiDialogService?: UIDialogService;
   uiViewportDialogService?: UIViewportDialogService;
   panelService?: PanelService;
+  viewerShellService?: ViewerShellService;
   multiMonitorService?: MultiMonitorService;
 }
 

@@ -4,4 +4,4 @@ export * from './components';
 export * from './contextProviders';
 export * as Types from './types';
 export { utils, cn, formatDICOMDate, formatDICOMTime, parseStudyDateTimestamp };
-export { useSessionStorage, useDynamicMaxHeight } from './hooks';
+export { useSessionStorage, useDynamicMaxHeight, useMediaQuery } from './hooks';

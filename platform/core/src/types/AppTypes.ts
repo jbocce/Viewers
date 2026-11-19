@@ -12,6 +12,7 @@ import WorkflowStepsServiceType from '../services/WorkflowStepsService';
 import CineServiceType from '../services/CineService';
 import UserAuthenticationServiceType from '../services/UserAuthenticationService';
 import PanelServiceType from '../services/PanelService';
+import ViewerShellServiceType from '../services/ViewerShellService';
 import UIDialogServiceType from '../services/UIDialogService';
 import UIViewportDialogServiceType from '../services/UIViewportDialogService';
 import StudyPrefetcherServiceType from '../services/StudyPrefetcherService';
@@ -56,6 +57,7 @@ declare global {
     export type UIDialogService = UIDialogServiceType;
     export type UIViewportDialogService = UIViewportDialogServiceType;
     export type PanelService = PanelServiceType;
+    export type ViewerShellService = ViewerShellServiceType;
     export type StudyPrefetcherService = StudyPrefetcherServiceType;
 
     export interface Managers {
@@ -121,6 +123,7 @@ declare global {
       uiDialogService?: UIDialogServiceType;
       uiViewportDialogService?: UIViewportDialogServiceType;
       panelService?: PanelServiceType;
+      viewerShellService?: ViewerShellServiceType;
       studyPrefetcherService?: StudyPrefetcherServiceType;
       multiMonitorService?: MultiMonitorService;
     }
